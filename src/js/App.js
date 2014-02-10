@@ -11,7 +11,14 @@ pinball.App = Backbone.View.extend({
 
     this.socket.on('arduino.connected', this.connectedHandler);
   },
+  changeView: function(v) {
+    this.$el.html(v.render().$el);
+    v.app = this;
+  },
   connectedHandler: function() {
     this.loader.stop();
+
+    // Show initial view.
+    this.changeView(new pinball.ServoTestView());
   }
 });

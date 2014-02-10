@@ -1,0 +1,16 @@
+{
+  "name": "pinball",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node index.js"
+  },
+  "devDependencies": {
+
+  },
+  "dependencies": {
+    "firmata": "*",
+    "express": "*",
+    "express-hbs": "*"
+  }
+}

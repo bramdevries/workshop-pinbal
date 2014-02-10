@@ -2,7 +2,7 @@ var frontControllers;
 
 frontControllers ={
   'index': function (req, res, next) {
-    return res.render('default');
+    return res.render('home');
   }
 };
 

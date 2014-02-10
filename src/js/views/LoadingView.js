@@ -1,6 +1,6 @@
 pinball.LoadingView = Backbone.View.extend({
   tagName: 'div',
-  className: 'loading-container center',
+  className: 'loading-container center fade',
   id: 'loader',
   template: templates.loading,
   initialize: function(el, message) {

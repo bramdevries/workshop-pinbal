@@ -26,7 +26,7 @@ pinball.App = Backbone.View.extend({
   },
   connectedHandler: function() {
     this.loader.stop();
-    this.timeout = null;
+    clearTimeout(this.timeout);
     // Show initial view.
     this.changeView(new pinball.ServoTestView());
   },

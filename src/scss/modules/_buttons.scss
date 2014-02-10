@@ -1,0 +1,18 @@
+.btn {
+  border: 1px solid #fff;
+  border-radius: 5px;
+  color: #fff;
+  display: inline-block;
+  padding: 9px 26px;
+  transition: all 0.3s $ease-in-out-sine;
+  font-family: $font;
+  font-size: em(10);
+  background: transparent;
+  cursor: pointer;
+  &:focus, &:hover {
+    outline: none;
+  }
+  &:hover {
+    background: rgba(#fff, 0.1);
+  }
+}

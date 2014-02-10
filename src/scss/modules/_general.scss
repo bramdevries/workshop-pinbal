@@ -1,0 +1,70 @@
+$font: "brandon-grotesque", sans-serif;
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+%center, .center {
+  position: relative;
+  top: 50%;
+  @include transform(translateY(-50%));
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  @include linear-gradient(to bottom, #66cbed, #658ded);
+  color: white;
+  font-family: $font;
+  font-weight: 100;
+  font-size: 160%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1 {
+  font-size: em(20);
+  margin-bottom: 30px;
+}
+
+.container {
+  max-width: 500px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  height: 100%;
+}
+
+.help {
+  text-align: center;
+  font-size: em(35);
+  font-weight: 100;
+  line-height: 1.5;
+}
+
+.failed {
+  @extend .fade;
+  text-align: center;
+  .help {
+    font-size: em(25);
+    margin-bottom: 20px;
+  }
+}
+
+.fade {
+  animation: fadeIn .2s $ease-in-out-sine;
+}
+
+@include keyframes(fadeIn) {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

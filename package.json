@@ -7,7 +7,7 @@
   },
   "devDependencies": {
     "gulp": "~3.5.1",
-    "gulp-sass": "~0.4.0",
+    "gulp-sass": "~0.6.0",
     "gulp-watch": "~0.5.0",
     "gulp-autoprefixer": "0.0.6",
     "gulp-livereload": "~0.3.1",

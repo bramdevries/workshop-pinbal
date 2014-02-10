@@ -1,14 +1,18 @@
 .spinner {
-  margin: 100px auto;
+  margin: 0 auto 50px;
   width: 20px;
   height: 20px;
   position: relative;
 }
 
+.loading-container {
+  @extend %center;
+}
+
 .container1 > div, .container2 > div, .container3 > div {
   width: 6px;
   height: 6px;
-  background-color: #35393c;
+  background-color: #fff;
 
   border-radius: 100%;
   position: absolute;

@@ -1,0 +1,11 @@
+.btn {
+  border: 1px solid #fff;
+  border-radius: 5px;
+  color: #fff;
+  display: inline-block;
+  padding: 9px 26px;
+  transition: all 0.3s $ease-in-out-sine;
+  &:hover {
+    background: rgba(#fff, 0.1);
+  }
+}

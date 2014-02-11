@@ -4,7 +4,7 @@ var board;
 
 var pins = {
   servo: 9,
-  triggers: [13, 12]
+  triggers: [13, 12, 11, 10]
 };
 
 module.exports = function(io) {

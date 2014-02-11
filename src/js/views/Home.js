@@ -5,19 +5,23 @@ pinball.HomeView = Backbone.View.extend({
   tagName: 'div',
   className: 'container fade',
   id: 'home',
-  template: templates.players,
+  template: templates.devices,
   events: {
-    'click [data-action="select"]': 'playerSelected',
+    'click [data-action="select"]': 'deviceSelected',
   },
   initialize: function(options) {
-    this.players = options.players;
+    this.devices = options.devices;
   },
-  playerSelected: function(e) {
+  deviceSelected: function(e) {
     e.preventDefault();
-    var player_id = $(e.currentTarget).data('player');
+    this.app.device_id = $(e.currentTarget).data('device_id');
+    this.app.socket.emit('arduino.selected', {device_id: this.app.device_id});
+
+    // Go to launch setup.
+    this.app.changeView(new pinball.LaunchView());
   },
   render: function() {
-    this.$el.html(this.template({players: this.players}));
+    this.$el.html(this.template({devices: this.devices}));
     return this;
   }
 });

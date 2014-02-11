@@ -4,10 +4,11 @@ var express = require('express'),
     http    = require('http'),
     io      = require('socket.io'),
     sockets = require('../sockets'),
-    Player  = require('../player'),
-    front   = require('../controllers/front');
+    Arduino = require('../arduino'),
+    front   = require('../controllers/front'),
+    board;
 
-var players = [];
+var devices = [];
 
 function setup(server) {
 
@@ -39,17 +40,18 @@ function setup(server) {
 
   io = io.listen(s);
 
-  sockets(io, players);
-  setupArduinos();
+  setupArduino();
   server.get('/', front.index);
 }
 
 /**
- * Connect to the Arduino's, each Arduino becomes a player.
- * On succes, show the amount of Arduino's that are connected to the players.
+ * Connect the arduino.
  */
-function setupArduinos() {
-  players.push(new Player(io, '/dev/tty.usbmodemfd121'));
+function setupArduino() {
+  var arduino = new Arduino('/dev/tty.usbmodemfd121');
+  arduino.connect(function(){
+    sockets(io, arduino);
+  });
 }
 
 function init(app) {

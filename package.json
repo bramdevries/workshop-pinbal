@@ -24,6 +24,7 @@
     "firmata": "*",
     "express": "*",
     "express-hbs": "*",
-    "socket.io": "*"
+    "socket.io": "*",
+    "hat": "0.0.3"
   }
 }

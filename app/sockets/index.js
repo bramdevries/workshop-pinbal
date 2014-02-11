@@ -1,8 +1,46 @@
-module.exports = function(io, players) {
-  io.sockets.on('connection', function(socket){
-    // When connecting to the server, look for both Arduino's. If found, let the user select which one he is.
-    socket.emit('arduino.players', {players: players.length});
+var Player = require('../player');
 
+var hat = require('hat');
+var clients = 0,
+    socket,
+    player;
+
+module.exports = function(io, arduino) {
+  io.sockets.on('connection', function(socket){
+    socket = socket;
+    if (clients >= 1) {
+      socket.emit('arduino.spectator');
+    }
+    else {
+      // Create a new player.
+      player = new Player(arduino);
+      socket.emit('arduino.playtime', {access_token: hat()});
+    }
+
+    socket.on('arduino.trigger', function(data){
+      player.arduino.trigger(data.trigger);
+    });
+
+/*
+    console.log('New client connected');
+   /* /*if (clients.length >= 2) {
+      console.log('Too many clients connected');
+    }*/
+
+   /* // When connecting to the server, look for both Arduino's. Return the connected amount.
+    socket.emit('arduino.devices', {devices: devices});
+
+    // A player selects an arduino, remove it from the available devices. Send back an updated list of devices.
+    socket.on('arduino.selected', function(data){
+      clients.push(new Client(devices.splice(data.device_id - 1)));
+      socket.emit('arduino.update_devices', {devices: devices});
+    });
+
+    socket.on('disconnect', function(){
+      console.log('Game ended');
+    });
+
+    // When disconnecting, end the game.
 /*
     socket.on('arduino.change', function(data){
       client.arduino.setAngle(data.angle);

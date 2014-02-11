@@ -3,11 +3,13 @@ pinball.ServoTestView = Backbone.View.extend({
   className: 'container',
   id: 'servoTest',
   template: templates.servoTest,
+  hasBack: true,
   events: {
     'click #submit': 'submitForm'
   },
   initialize: function() {
     _.bindAll(this, 'submitForm');
+    this.previousView = pinball.HomeView;
   },
   render: function() {
     this.$el.html(this.template());

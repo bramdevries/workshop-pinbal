@@ -3,11 +3,12 @@ pinball.ControlsView = Backbone.View.extend({
   className: 'container fade',
   id: 'home',
   template: templates.controls,
+  hasBack: true,
   events: {
     'click [data-action="trigger"]': 'triggerClickedHandler'
   },
   initialize: function() {
-
+    this.previousView = pinball.HomeView;
   },
   render: function() {
     this.$el.html(this.template());

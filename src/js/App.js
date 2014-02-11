@@ -5,10 +5,11 @@ pinball.App = Backbone.View.extend({
   events: {
     'click [data-action="retry"]': 'retryClickedHandler',
     'click [data-action="play"]': 'playClickedHandler',
-    'click [data-action="controls"]': 'controlsClickedHandler'
+    'click [data-action="controls"]': 'controlsClickedHandler',
+    'click [data-action="back"]': 'backClickedHandler'
   },
   initialize: function() {
-    _.bindAll(this, 'connectedHandler', 'timeoutHandler', 'retryClickedHandler');
+    _.bindAll(this, 'connectedHandler', 'timeoutHandler');
 
     this.socket = io.connect(window.location);
     this.loader = new pinball.LoadingView(this.$el);
@@ -23,8 +24,18 @@ pinball.App = Backbone.View.extend({
     this.socket.on('arduino.connected', this.connectedHandler);
   },
   changeView: function(v) {
-    this.$el.html(v.render().$el);
     v.app = this;
+    this.currentview = v;
+    this.$el.html(v.render().$el);
+    this.showBack(v.hasBack);
+  },
+  showBack: function(show) {
+    if (show) {
+      this.$el.append(templates.back());
+    }
+    else {
+      this.$el.find('.back').remove();
+    }
   },
   connectedHandler: function() {
     this.loader.stop();
@@ -37,7 +48,6 @@ pinball.App = Backbone.View.extend({
   },
   retryClickedHandler: function(e) {
     e.preventDefault();
-
     this.connect();
   },
   playClickedHandler: function(e) {
@@ -47,5 +57,9 @@ pinball.App = Backbone.View.extend({
   controlsClickedHandler: function(e) {
     e.preventDefault();
     this.changeView(new pinball.ControlsView());
+  },
+  backClickedHandler: function(e) {
+    e.preventDefault();
+    this.changeView(new this.currentview.previousView());
   }
 });

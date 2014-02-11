@@ -1,13 +1,12 @@
 var Arduino = require('../arduino');
 
-function Client(socket) {
-  this.arduino = new Arduino();
+function Player(socket, path) {
   this.socket = socket;
-
   var self = this;
-  this.arduino.connect(function(){
+  this.board = new Arduino(path).connect(function(b){
     self.socket.emit('arduino.connected');
+    return b;
   });
 }
 
-module.exports = Client;
+module.exports = Player;

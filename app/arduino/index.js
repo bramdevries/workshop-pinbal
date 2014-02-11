@@ -1,19 +1,17 @@
-var firmata = require('firmata'),
-    config  = require('../config');
-
+var firmata = require('firmata');
 
 var pins = {
   servo: 9,
   triggers: [13, 12, 11, 10]
 };
 
-function Arduino () {
-  this.board = undefined;
+function Arduino (path) {
+  this.path = path;
 }
 
 Arduino.prototype.connect = function(next) {
   var self = this;
-  var board = new firmata.Board(config.path, function(err){
+  var board = new firmata.Board(this.path, function(err){
     if (err) {console.log(err); return;}
 
     board.pinMode(pins.servo, board.MODES.SERVO);
@@ -22,8 +20,7 @@ Arduino.prototype.connect = function(next) {
       board.pinMode(pins.triggers[i], board.MODES.OUTPUT);
     }
 
-    self.board = board;
-    next();
+    next(board);
   });
 };
 

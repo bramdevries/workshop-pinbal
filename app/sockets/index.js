@@ -1,16 +1,15 @@
-var Client = require('../clients');
-
-module.exports = function(io) {
+module.exports = function(io, players) {
   io.sockets.on('connection', function(socket){
-    // When connecting to the server, look for an Arduino. If it's found, connect. If not, return an error.
-    var client = new Client(socket);
+    // When connecting to the server, look for both Arduino's. If found, let the user select which one he is.
+    socket.emit('arduino.players', {players: players.length});
 
+/*
     socket.on('arduino.change', function(data){
       client.arduino.setAngle(data.angle);
     });
 
     socket.on('arduino.controls', function(data){
       client.arduino.trigger(data.trigger);
-    });
+    });*/
   });
 };

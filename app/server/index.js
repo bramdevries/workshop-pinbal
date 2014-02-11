@@ -1,14 +1,13 @@
-// Dependencies
-//
-
 var express = require('express'),
     hbs     = require('express-hbs'),
     path    = require('path'),
     http    = require('http'),
     io      = require('socket.io'),
     sockets = require('../sockets'),
+    Player  = require('../player'),
     front   = require('../controllers/front');
 
+var players = [];
 
 function setup(server) {
 
@@ -40,9 +39,17 @@ function setup(server) {
 
   io = io.listen(s);
 
+  sockets(io, players);
+  setupArduinos();
   server.get('/', front.index);
+}
 
-  sockets(io);
+/**
+ * Connect to the Arduino's, each Arduino becomes a player.
+ * On succes, show the amount of Arduino's that are connected to the players.
+ */
+function setupArduinos() {
+  players.push(new Player(io, '/dev/tty.usbmodemfd121'));
 }
 
 function init(app) {

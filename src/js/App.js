@@ -9,12 +9,14 @@ pinball.App = Backbone.View.extend({
     'click [data-action="back"]': 'backClickedHandler'
   },
   initialize: function() {
-    _.bindAll(this, 'connectedHandler', 'timeoutHandler');
+    _.bindAll(this, 'connectedHandler', 'fetchedPlayers');
 
     this.socket = io.connect(window.location);
-    this.loader = new pinball.LoadingView(this.$el);
-
-    this.connect();
+    this.socket.on('arduino.players', this.fetchedPlayers);
+  },
+  fetchedPlayers: function(data) {
+    this.players = data.players;
+    this.changeView(new pinball.HomeView({players: this.players}));
   },
   connect: function() {
 

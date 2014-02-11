@@ -3,7 +3,8 @@ pinball.App = Backbone.View.extend({
   className: "container",
   id: "app",
   events: {
-    'click [data-action="retry"]': 'retryClickedHandler'
+    'click [data-action="retry"]': 'retryClickedHandler',
+    'click [data-action="play"]': 'playClickedHandler'
   },
   initialize: function() {
     _.bindAll(this, 'connectedHandler', 'timeoutHandler', 'retryClickedHandler');
@@ -28,7 +29,7 @@ pinball.App = Backbone.View.extend({
     this.loader.stop();
     clearTimeout(this.timeout);
     // Show initial view.
-    this.changeView(new pinball.ServoTestView());
+    this.changeView(new pinball.HomeView());
   },
   timeoutHandler: function(e) {
     this.changeView(new pinball.FailedConnectionView());
@@ -37,5 +38,9 @@ pinball.App = Backbone.View.extend({
     e.preventDefault();
 
     this.connect();
+  },
+  playClickedHandler: function(e) {
+    e.preventDefault();
+    this.changeView(new pinball.ServoTestView());
   }
 });

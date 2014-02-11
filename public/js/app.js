@@ -4,12 +4,25 @@
  */
 (function(){
 var pinball = {};
-this.templates=this.templates||{},this.templates.failedConnection=Handlebars.template(function(i,e,n,s,t){return this.compilerInfo=[4,">= 1.0.0"],n=this.merge(n,i.helpers),t=t||{},'<div class="failed center">\n  <p class="help">Could not connect to the Arduino, try reconnecting it.</p>\n  <a href="#" data-action="retry" class="btn">Try Again.</a>\n</div>'}),this.templates=this.templates||{},this.templates.loading=Handlebars.template(function(i,e,n,s,t){return this.compilerInfo=[4,">= 1.0.0"],n=this.merge(n,i.helpers),t=t||{},'<div class="spinner">\n  <div class="spinner-container container1">\n    <div class="circle1"></div>\n    <div class="circle2"></div>\n    <div class="circle3"></div>\n    <div class="circle4"></div>\n  </div>\n  <div class="spinner-container container2">\n    <div class="circle1"></div>\n    <div class="circle2"></div>\n    <div class="circle3"></div>\n    <div class="circle4"></div>\n  </div>\n  <div class="spinner-container container3">\n    <div class="circle1"></div>\n    <div class="circle2"></div>\n    <div class="circle3"></div>\n    <div class="circle4"></div>\n  </div>\n</div>'}),this.templates=this.templates||{},this.templates.servoTest=Handlebars.template(function(i,e,n,s,t){return this.compilerInfo=[4,">= 1.0.0"],n=this.merge(n,i.helpers),t=t||{},'<h1>Servo Testing</h1>\n\n<form action="/" method="POST">\n  <fieldset>\n    <div class="input">\n      <label for="angle">Degrees</label>\n      <input type="range" name="angle" id="angle" min="0" max="180">\n    </div>\n    <div class="input">\n      <button id="submit" type="submit" class="btn">Adjust angle</button>\n    </div>\n  </fieldset>\n</form>'});
+this.templates=this.templates||{},this.templates.failedConnection=Handlebars.template(function(e,i,n,t,s){return this.compilerInfo=[4,">= 1.0.0"],n=this.merge(n,e.helpers),s=s||{},'<div class="failed center">\n  <p class="help">Could not connect to the Arduino, try reconnecting it.</p>\n  <a href="#" data-action="retry" class="btn">Try Again.</a>\n</div>'}),this.templates=this.templates||{},this.templates.home=Handlebars.template(function(e,i,n,t,s){return this.compilerInfo=[4,">= 1.0.0"],n=this.merge(n,e.helpers),s=s||{},'<div class="actions">\n  <a href="/" data-action="play" class="btn">Play</a>\n  <a href="/" data-action="about" class="btn">About</a>\n</div>'}),this.templates=this.templates||{},this.templates.loading=Handlebars.template(function(e,i,n,t,s){return this.compilerInfo=[4,">= 1.0.0"],n=this.merge(n,e.helpers),s=s||{},'<div class="spinner">\n  <div class="spinner-container container1">\n    <div class="circle1"></div>\n    <div class="circle2"></div>\n    <div class="circle3"></div>\n    <div class="circle4"></div>\n  </div>\n  <div class="spinner-container container2">\n    <div class="circle1"></div>\n    <div class="circle2"></div>\n    <div class="circle3"></div>\n    <div class="circle4"></div>\n  </div>\n  <div class="spinner-container container3">\n    <div class="circle1"></div>\n    <div class="circle2"></div>\n    <div class="circle3"></div>\n    <div class="circle4"></div>\n  </div>\n</div>'}),this.templates=this.templates||{},this.templates.servoTest=Handlebars.template(function(e,i,n,t,s){return this.compilerInfo=[4,">= 1.0.0"],n=this.merge(n,e.helpers),s=s||{},'<h1>Servo Testing</h1>\n\n<form action="/" method="POST">\n  <fieldset>\n    <div class="input">\n      <label for="angle">Degrees</label>\n      <input type="range" name="angle" id="angle" min="0" max="180">\n    </div>\n    <div class="input">\n      <button id="submit" type="submit" class="btn">Adjust angle</button>\n    </div>\n  </fieldset>\n</form>'});
 pinball.FailedConnectionView = Backbone.View.extend({
   tagName: 'div',
   className: 'container',
   id: 'connectionFailed',
   template: templates.failedConnection,
+  initialize: function() {
+
+  },
+  render: function() {
+    this.$el.html(this.template());
+    return this;
+  }
+});
+pinball.HomeView = Backbone.View.extend({
+  tagName: 'div',
+  className: 'container fade',
+  id: 'home',
+  template: templates.home,
   initialize: function() {
 
   },
@@ -70,7 +83,8 @@ pinball.App = Backbone.View.extend({
   className: "container",
   id: "app",
   events: {
-    'click [data-action="retry"]': 'retryClickedHandler'
+    'click [data-action="retry"]': 'retryClickedHandler',
+    'click [data-action="play"]': 'playClickedHandler'
   },
   initialize: function() {
     _.bindAll(this, 'connectedHandler', 'timeoutHandler', 'retryClickedHandler');
@@ -95,7 +109,7 @@ pinball.App = Backbone.View.extend({
     this.loader.stop();
     clearTimeout(this.timeout);
     // Show initial view.
-    this.changeView(new pinball.ServoTestView());
+    this.changeView(new pinball.HomeView());
   },
   timeoutHandler: function(e) {
     this.changeView(new pinball.FailedConnectionView());
@@ -104,6 +118,10 @@ pinball.App = Backbone.View.extend({
     e.preventDefault();
 
     this.connect();
+  },
+  playClickedHandler: function(e) {
+    e.preventDefault();
+    this.changeView(new pinball.ServoTestView());
   }
 });
 var app = new pinball.App();

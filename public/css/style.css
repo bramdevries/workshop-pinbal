@@ -150,7 +150,7 @@ table {
   -moz-box-sizing: border-box;
   box-sizing: border-box; }
 
-.loading-container, .center {
+.loading-container, .center, .actions, .center {
   position: relative;
   top: 50%;
   -webkit-transform: translateY(-50%);
@@ -202,6 +202,13 @@ h1 {
   -webkit-animation: fadeIn 0.2s cubic-bezier(0.445, 0.05, 0.55, 0.95);
   animation: fadeIn 0.2s cubic-bezier(0.445, 0.05, 0.55, 0.95); }
 
+.actions .btn {
+  margin: 0 auto;
+  display: block;
+  max-width: 200px;
+  text-align: center;
+  margin-bottom: 20px; }
+
 @-webkit-keyframes fadeIn {
   from {
     opacity: 0; }
@@ -225,7 +232,7 @@ h1 {
   -webkit-transition: all 0.3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
   transition: all 0.3s cubic-bezier(0.445, 0.05, 0.55, 0.95);
   font-family: "brandon-grotesque", sans-serif;
-  font-size: 0.625em;
+  font-size: 1em;
   background: transparent;
   cursor: pointer; }
   .btn:focus, .btn:hover {

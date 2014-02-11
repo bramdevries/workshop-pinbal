@@ -1,6 +1,4 @@
 var Player = require('../player');
-
-var hat = require('hat');
 var clients = 0,
     socket,
     player;
@@ -14,11 +12,17 @@ module.exports = function(io, arduino) {
     else {
       // Create a new player.
       player = new Player(arduino);
-      socket.emit('arduino.playtime', {access_token: hat()});
+      socket.emit('arduino.playtime', {access_token: player.access_token});
     }
 
     socket.on('arduino.trigger', function(data){
-      player.arduino.trigger(data.trigger);
+      if (data.access_token === player.access_token) {
+        player.arduino.trigger(data.trigger);
+      }
+    });
+
+    socket.on('arduino.launcher_set', function(data){
+      console.log(data);
     });
 
 /*

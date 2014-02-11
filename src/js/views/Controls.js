@@ -18,6 +18,6 @@ pinball.ControlsView = Backbone.View.extend({
     e.preventDefault();
     var trigger = $(e.currentTarget).data('trigger');
 
-    this.app.socket.emit('arduino.trigger', {trigger: trigger});
+    this.app.socket.emit('arduino.trigger', {trigger: trigger, access_token: this.app.access_token});
   }
 });

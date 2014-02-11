@@ -4,7 +4,8 @@ pinball.App = Backbone.View.extend({
   id: "app",
   events: {
     'click [data-action="retry"]': 'retryClickedHandler',
-    'click [data-action="play"]': 'playClickedHandler'
+    'click [data-action="play"]': 'playClickedHandler',
+    'click [data-action="controls"]': 'LedClickedHandler'
   },
   initialize: function() {
     _.bindAll(this, 'connectedHandler', 'timeoutHandler', 'retryClickedHandler');
@@ -42,5 +43,9 @@ pinball.App = Backbone.View.extend({
   playClickedHandler: function(e) {
     e.preventDefault();
     this.changeView(new pinball.ServoTestView());
+  },
+  LedClickedHandler: function(e) {
+    e.preventDefault();
+    this.socket.emit('arduino.controls');
   }
 });

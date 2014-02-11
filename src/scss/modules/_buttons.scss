@@ -15,4 +15,11 @@
   &:hover {
     background: rgba(#fff, 0.1);
   }
+  &.back {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    text-transform: uppercase;
+    font-size: em(13);
+  }
 }

@@ -4,7 +4,7 @@ var board;
 
 var pins = {
   servo: 9,
-  trigger1: 13
+  triggers: [13, 12]
 };
 
 module.exports = function(io) {
@@ -15,7 +15,10 @@ module.exports = function(io) {
       socket.emit('arduino.connected');
 
       b.pinMode(pins.servo, b.MODES.SERVO);
-      b.pinMode(pins.trigger1, b.MODES.OUTPUT);
+
+      for (var i = 0; i  < pins.triggers.length; i++) {
+        b.pinMode(pins.triggers[i], b.MODES.OUTPUT);
+      }
 
       board = b;
     });
@@ -24,12 +27,16 @@ module.exports = function(io) {
       board.servoWrite(pins.servo, data.angle);
     });
 
-    socket.on('arduino.controls', function(){
-      board.digitalWrite(pins.trigger1, board.HIGH);
-      // Reset it after x amount of miliseconds
-      setTimeout(function(){
-        board.digitalWrite(pins.trigger1, board.LOW);
-      }, 200);
+    socket.on('arduino.controls', function(data){
+
+      var trigger = pins.triggers[data.trigger - 1];
+
+      if (trigger !== undefined) {
+        board.digitalWrite(trigger, board.HIGH);
+        setTimeout(function(){
+          board.digitalWrite(trigger, board.LOW);
+        }, 300);
+      }
     });
   });
 };

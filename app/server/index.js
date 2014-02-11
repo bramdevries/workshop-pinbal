@@ -1,14 +1,14 @@
-// Dependencies
-//
-
 var express = require('express'),
     hbs     = require('express-hbs'),
     path    = require('path'),
     http    = require('http'),
     io      = require('socket.io'),
     sockets = require('../sockets'),
-    front   = require('../controllers/front');
+    Arduino = require('../arduino'),
+    front   = require('../controllers/front'),
+    board;
 
+var devices = [];
 
 function setup(server) {
 
@@ -40,9 +40,18 @@ function setup(server) {
 
   io = io.listen(s);
 
+  setupArduino();
   server.get('/', front.index);
+}
 
-  sockets(io);
+/**
+ * Connect the arduino.
+ */
+function setupArduino() {
+  var arduino = new Arduino('/dev/tty.usbmodemfd121');
+  arduino.connect(function(){
+    sockets(io, arduino);
+  });
 }
 
 function init(app) {

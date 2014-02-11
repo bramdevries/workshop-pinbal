@@ -4,7 +4,13 @@
  */
 (function(){
 var pinball = {};
-this.templates=this.templates||{},this.templates.back=Handlebars.template(function(t,e,a,i,n){return this.compilerInfo=[4,">= 1.0.0"],a=this.merge(a,t.helpers),n=n||{},'<a href="#" data-action="back" class="btn back">Back</a>'}),this.templates=this.templates||{},this.templates.controls=Handlebars.template(function(t,e,a,i,n){return this.compilerInfo=[4,">= 1.0.0"],a=this.merge(a,t.helpers),n=n||{},'<div class="actions">\n  <a href="/" data-action="trigger" data-trigger="1" class="btn">Trigger 1</a>\n  <a href="/" data-action="trigger" data-trigger="2" class="btn">Trigger 2</a>\n  <a href="/" data-action="trigger" data-trigger="3" class="btn">Trigger 3</a>\n  <a href="/" data-action="trigger" data-trigger="4" class="btn">Trigger 4</a>\n</div>'}),this.templates=this.templates||{},this.templates.failedConnection=Handlebars.template(function(t,e,a,i,n){return this.compilerInfo=[4,">= 1.0.0"],a=this.merge(a,t.helpers),n=n||{},'<div class="failed center">\n  <p class="help">Could not connect to the Arduino, try reconnecting it.</p>\n  <a href="#" data-action="retry" class="btn">Try Again.</a>\n</div>'}),this.templates=this.templates||{},this.templates.home=Handlebars.template(function(t,e,a,i,n){return this.compilerInfo=[4,">= 1.0.0"],a=this.merge(a,t.helpers),n=n||{},'<div class="actions">\n  <a href="/" data-action="play" class="btn">Play</a>\n  <a href="/" data-action="controls" class="btn">LED Controls</a>\n  <a href="/" data-action="about" class="btn">About</a>\n</div>'}),this.templates=this.templates||{},this.templates.loading=Handlebars.template(function(t,e,a,i,n){return this.compilerInfo=[4,">= 1.0.0"],a=this.merge(a,t.helpers),n=n||{},'<div class="spinner">\n  <div class="spinner-container container1">\n    <div class="circle1"></div>\n    <div class="circle2"></div>\n    <div class="circle3"></div>\n    <div class="circle4"></div>\n  </div>\n  <div class="spinner-container container2">\n    <div class="circle1"></div>\n    <div class="circle2"></div>\n    <div class="circle3"></div>\n    <div class="circle4"></div>\n  </div>\n  <div class="spinner-container container3">\n    <div class="circle1"></div>\n    <div class="circle2"></div>\n    <div class="circle3"></div>\n    <div class="circle4"></div>\n  </div>\n</div>'}),this.templates=this.templates||{},this.templates.servoTest=Handlebars.template(function(t,e,a,i,n){return this.compilerInfo=[4,">= 1.0.0"],a=this.merge(a,t.helpers),n=n||{},'<h1>Servo Testing</h1>\n\n<form action="/" method="POST">\n  <fieldset>\n    <div class="input">\n      <label for="angle">Degrees</label>\n      <input type="range" name="angle" id="angle" min="0" max="180">\n    </div>\n    <div class="input">\n      <button id="submit" type="submit" class="btn">Adjust angle</button>\n    </div>\n  </fieldset>\n</form>'});
+Handlebars.registerHelper('times', function(n, block) {
+    var accum = '';
+    for(var i = 0; i < n; ++i)
+        accum += block.fn(i + 1);
+    return accum;
+});
+this.templates=this.templates||{},this.templates.back=Handlebars.template(function(e,t,a,s,n){return this.compilerInfo=[4,">= 1.0.0"],a=this.merge(a,e.helpers),n=n||{},'<a href="#" data-action="back" class="btn back">Back</a>'}),this.templates=this.templates||{},this.templates.controls=Handlebars.template(function(e,t,a,s,n){return this.compilerInfo=[4,">= 1.0.0"],a=this.merge(a,e.helpers),n=n||{},'<div class="actions">\n  <a href="/" data-action="trigger" data-trigger="1" class="btn">Trigger 1</a>\n  <a href="/" data-action="trigger" data-trigger="2" class="btn">Trigger 2</a>\n</div>'}),this.templates=this.templates||{},this.templates.devices=Handlebars.template(function(e,t,a,s,n){function i(e,t){var s,n="";return n+='\n  <a href="#" class="btn" data-action="select" data-device_id="',(s=a.id)?s=s.call(e,{hash:{},data:t}):(s=e&&e.id,s=typeof s===c?s.call(e,{hash:{},data:t}):s),n+=h(s)+'">',(s=a.name)?s=s.call(e,{hash:{},data:t}):(s=e&&e.name,s=typeof s===c?s.call(e,{hash:{},data:t}):s),n+=h(s)+"</a>\n"}this.compilerInfo=[4,">= 1.0.0"],a=this.merge(a,e.helpers),n=n||{};var l,r="",c="function",h=this.escapeExpression,d=this;return r+="<h1>Select Device</h1>\n\n",l=a.each.call(t,t&&t.devices,{hash:{},inverse:d.noop,fn:d.program(1,i,n),data:n}),(l||0===l)&&(r+=l),r}),this.templates=this.templates||{},this.templates.failedConnection=Handlebars.template(function(e,t,a,s,n){return this.compilerInfo=[4,">= 1.0.0"],a=this.merge(a,e.helpers),n=n||{},'<div class="failed center">\n  <p class="help">Could not connect to the Arduino, try reconnecting it.</p>\n  <a href="#" data-action="retry" class="btn">Try Again.</a>\n</div>'}),this.templates=this.templates||{},this.templates.home=Handlebars.template(function(e,t,a,s,n){return this.compilerInfo=[4,">= 1.0.0"],a=this.merge(a,e.helpers),n=n||{},'<div class="actions">\n  <a href="/" data-action="play" class="btn">Play</a>\n  <a href="/" data-action="controls" class="btn">LED Controls</a>\n  <a href="/" data-action="about" class="btn">About</a>\n</div>'}),this.templates=this.templates||{},this.templates.launch=Handlebars.template(function(e,t,a,s,n){return this.compilerInfo=[4,">= 1.0.0"],a=this.merge(a,e.helpers),n=n||{},'<h1>Lanceren</h1>\n<a href="#" class="btn" data-action="link" data-view="controls">Ga naar controls</a>\n'}),this.templates=this.templates||{},this.templates.loading=Handlebars.template(function(e,t,a,s,n){return this.compilerInfo=[4,">= 1.0.0"],a=this.merge(a,e.helpers),n=n||{},'<div class="spinner">\n  <div class="spinner-container container1">\n    <div class="circle1"></div>\n    <div class="circle2"></div>\n    <div class="circle3"></div>\n    <div class="circle4"></div>\n  </div>\n  <div class="spinner-container container2">\n    <div class="circle1"></div>\n    <div class="circle2"></div>\n    <div class="circle3"></div>\n    <div class="circle4"></div>\n  </div>\n  <div class="spinner-container container3">\n    <div class="circle1"></div>\n    <div class="circle2"></div>\n    <div class="circle3"></div>\n    <div class="circle4"></div>\n  </div>\n</div>'}),this.templates=this.templates||{},this.templates.score=Handlebars.template(function(e,t,a,s,n){return this.compilerInfo=[4,">= 1.0.0"],a=this.merge(a,e.helpers),n=n||{},"<h1>Score</h1>"}),this.templates=this.templates||{},this.templates.servoTest=Handlebars.template(function(e,t,a,s,n){return this.compilerInfo=[4,">= 1.0.0"],a=this.merge(a,e.helpers),n=n||{},'<h1>Servo Testing</h1>\n\n<form action="/" method="POST">\n  <fieldset>\n    <div class="input">\n      <label for="angle">Degrees</label>\n      <input type="range" name="angle" id="angle" min="0" max="180">\n    </div>\n    <div class="input">\n      <button id="submit" type="submit" class="btn">Adjust angle</button>\n    </div>\n  </fieldset>\n</form>'});
 pinball.ControlsView = Backbone.View.extend({
   tagName: 'div',
   className: 'container fade',
@@ -25,7 +31,7 @@ pinball.ControlsView = Backbone.View.extend({
     e.preventDefault();
     var trigger = $(e.currentTarget).data('trigger');
 
-    this.app.socket.emit('arduino.controls', {trigger: trigger});
+    this.app.socket.emit('arduino.trigger', {trigger: trigger});
   }
 });
 pinball.FailedConnectionView = Backbone.View.extend({
@@ -41,16 +47,48 @@ pinball.FailedConnectionView = Backbone.View.extend({
     return this;
   }
 });
+/**
+ * Player selection screen: Show the amount of connected Arduino's.
+ */
 pinball.HomeView = Backbone.View.extend({
   tagName: 'div',
   className: 'container fade',
   id: 'home',
-  template: templates.home,
-  initialize: function() {
+  template: templates.devices,
+  events: {
+    'click [data-action="select"]': 'deviceSelected',
+  },
+  initialize: function(options) {
+    this.devices = options.devices;
+  },
+  deviceSelected: function(e) {
+    e.preventDefault();
+    this.app.device_id = $(e.currentTarget).data('device_id');
+    this.app.socket.emit('arduino.selected', {device_id: this.app.device_id});
 
+    // Go to launch setup.
+    this.app.changeView(new pinball.LaunchView());
   },
   render: function() {
-    this.$el.html(this.template());
+    this.$el.html(this.template({devices: this.devices}));
+    return this;
+  }
+});
+/**
+ * Interface to set the force of the launch.
+ * - Shows a graphic that will be filled for a specific percentage, when clicked it freezes and the current percentage will be used
+ *   to determine the force of the launch.
+ * - When that's done, we show the controls for the triggers.
+ */
+pinball.LaunchView = Backbone.View.extend({
+  tagName: 'div',
+  className: 'container fade',
+  id: 'launch',
+  template: templates.launch,
+  initialize: function(options) {
+  },
+  render: function() {
+    this.$el.html(this.template({players: this.players}));
     return this;
   }
 });
@@ -76,6 +114,18 @@ pinball.LoadingView = Backbone.View.extend({
   },
   stop: function() {
     this.$el.remove();
+    return this;
+  }
+});
+pinball.ScoreView = Backbone.View.extend({
+  tagName: 'div',
+  className: 'container fade',
+  id: 'score',
+  template: templates.score,
+  initialize: function(options) {
+  },
+  render: function() {
+    this.$el.html(this.template({players: this.players}));
     return this;
   }
 });
@@ -108,64 +158,34 @@ pinball.App = Backbone.View.extend({
   className: "container",
   id: "app",
   events: {
-    'click [data-action="retry"]': 'retryClickedHandler',
-    'click [data-action="play"]': 'playClickedHandler',
-    'click [data-action="controls"]': 'controlsClickedHandler',
-    'click [data-action="back"]': 'backClickedHandler'
+    'click [data-action="link"]': 'linkClickedHandler'
   },
   initialize: function() {
-    _.bindAll(this, 'connectedHandler', 'timeoutHandler');
+    _.bindAll(this, 'playtime', 'spectator');
 
     this.socket = io.connect(window.location);
-    this.loader = new pinball.LoadingView(this.$el);
-
-    this.connect();
+    this.socket.on('arduino.playtime', this.playtime);
+    this.socket.on('arduino.spectator', this.spectator);
   },
-  connect: function() {
-
-    this.timeout = setTimeout(this.timeoutHandler, 10000);
-    this.loader.start('Connecting with an Arduino');
-
-    this.socket.on('arduino.connected', this.connectedHandler);
+  spectator: function(e) {
+    // Show the score screen.
+    this.setView(new pinball.ScoreView());
   },
-  changeView: function(v) {
+  playtime: function(data){
+    // Show the launch screen.
+    this.access_token = data.access_token;
+    this.setView(new pinball.LaunchView());
+  },
+  setView: function(v) {
     v.app = this;
-    this.currentview = v;
     this.$el.html(v.render().$el);
-    this.showBack(v.hasBack);
   },
-  showBack: function(show) {
-    if (show) {
-      this.$el.append(templates.back());
+  linkClickedHandler: function(e) {
+    e.preventDefault();
+    var view = $(e.currentTarget).data('view');
+    switch(view) {
+      case 'controls': this.setView(new pinball.ControlsView()); break;
     }
-    else {
-      this.$el.find('.back').remove();
-    }
-  },
-  connectedHandler: function() {
-    this.loader.stop();
-    clearTimeout(this.timeout);
-    // Show initial view.
-    this.changeView(new pinball.HomeView());
-  },
-  timeoutHandler: function(e) {
-    this.changeView(new pinball.FailedConnectionView());
-  },
-  retryClickedHandler: function(e) {
-    e.preventDefault();
-    this.connect();
-  },
-  playClickedHandler: function(e) {
-    e.preventDefault();
-    this.changeView(new pinball.ServoTestView());
-  },
-  controlsClickedHandler: function(e) {
-    e.preventDefault();
-    this.changeView(new pinball.ControlsView());
-  },
-  backClickedHandler: function(e) {
-    e.preventDefault();
-    this.changeView(new this.currentview.previousView());
   }
 });
 var app = new pinball.App();

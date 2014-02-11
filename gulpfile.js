@@ -56,6 +56,7 @@ var foot = [
 
 gulp.task('scripts', function(){
   gulp.src([
+    './src/js/Helpers.js',
     './src/js/templates.js',
     './src/js/views/*.js',
     './src/js/router.js',

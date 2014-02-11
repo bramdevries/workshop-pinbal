@@ -1,42 +1,53 @@
-var arduino = require('../arduino');
+var Player = require('../player');
 
-var board;
+var hat = require('hat');
+var clients = 0,
+    socket,
+    player;
 
-var pins = {
-  servo: 9,
-  triggers: [13, 12, 11, 10]
-};
-
-module.exports = function(io) {
+module.exports = function(io, arduino) {
   io.sockets.on('connection', function(socket){
-    // When connecting to the server, look for an Arduino. If it's found, connect. If not, return an error.
-    arduino.connect(function(b){
-      // Emit a notification that we connected to the Arduino.
-      socket.emit('arduino.connected');
+    socket = socket;
+    if (clients >= 1) {
+      socket.emit('arduino.spectator');
+    }
+    else {
+      // Create a new player.
+      player = new Player(arduino);
+      socket.emit('arduino.playtime', {access_token: hat()});
+    }
 
-      b.pinMode(pins.servo, b.MODES.SERVO);
-
-      for (var i = 0; i  < pins.triggers.length; i++) {
-        b.pinMode(pins.triggers[i], b.MODES.OUTPUT);
-      }
-
-      board = b;
+    socket.on('arduino.trigger', function(data){
+      player.arduino.trigger(data.trigger);
     });
 
+/*
+    console.log('New client connected');
+   /* /*if (clients.length >= 2) {
+      console.log('Too many clients connected');
+    }*/
+
+   /* // When connecting to the server, look for both Arduino's. Return the connected amount.
+    socket.emit('arduino.devices', {devices: devices});
+
+    // A player selects an arduino, remove it from the available devices. Send back an updated list of devices.
+    socket.on('arduino.selected', function(data){
+      clients.push(new Client(devices.splice(data.device_id - 1)));
+      socket.emit('arduino.update_devices', {devices: devices});
+    });
+
+    socket.on('disconnect', function(){
+      console.log('Game ended');
+    });
+
+    // When disconnecting, end the game.
+/*
     socket.on('arduino.change', function(data){
-      board.servoWrite(pins.servo, data.angle);
+      client.arduino.setAngle(data.angle);
     });
 
     socket.on('arduino.controls', function(data){
-
-      var trigger = pins.triggers[data.trigger - 1];
-
-      if (trigger !== undefined) {
-        board.digitalWrite(trigger, board.HIGH);
-        setTimeout(function(){
-          board.digitalWrite(trigger, board.LOW);
-        }, 300);
-      }
-    });
+      client.arduino.trigger(data.trigger);
+    });*/
   });
 };

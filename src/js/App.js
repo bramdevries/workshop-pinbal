@@ -3,63 +3,33 @@ pinball.App = Backbone.View.extend({
   className: "container",
   id: "app",
   events: {
-    'click [data-action="retry"]': 'retryClickedHandler',
-    'click [data-action="play"]': 'playClickedHandler',
-    'click [data-action="controls"]': 'controlsClickedHandler',
-    'click [data-action="back"]': 'backClickedHandler'
+    'click [data-action="link"]': 'linkClickedHandler'
   },
   initialize: function() {
-    _.bindAll(this, 'connectedHandler', 'timeoutHandler');
+    _.bindAll(this, 'playtime', 'spectator');
 
     this.socket = io.connect(window.location);
-    this.loader = new pinball.LoadingView(this.$el);
-
-    this.connect();
+    this.socket.on('arduino.playtime', this.playtime);
+    this.socket.on('arduino.spectator', this.spectator);
   },
-  connect: function() {
-
-    this.timeout = setTimeout(this.timeoutHandler, 10000);
-    this.loader.start('Connecting with an Arduino');
-
-    this.socket.on('arduino.connected', this.connectedHandler);
+  spectator: function(e) {
+    // Show the score screen.
+    this.setView(new pinball.ScoreView());
   },
-  changeView: function(v) {
+  playtime: function(data){
+    // Show the launch screen.
+    this.access_token = data.access_token;
+    this.setView(new pinball.LaunchView());
+  },
+  setView: function(v) {
     v.app = this;
-    this.currentview = v;
     this.$el.html(v.render().$el);
-    this.showBack(v.hasBack);
   },
-  showBack: function(show) {
-    if (show) {
-      this.$el.append(templates.back());
+  linkClickedHandler: function(e) {
+    e.preventDefault();
+    var view = $(e.currentTarget).data('view');
+    switch(view) {
+      case 'controls': this.setView(new pinball.ControlsView()); break;
     }
-    else {
-      this.$el.find('.back').remove();
-    }
-  },
-  connectedHandler: function() {
-    this.loader.stop();
-    clearTimeout(this.timeout);
-    // Show initial view.
-    this.changeView(new pinball.HomeView());
-  },
-  timeoutHandler: function(e) {
-    this.changeView(new pinball.FailedConnectionView());
-  },
-  retryClickedHandler: function(e) {
-    e.preventDefault();
-    this.connect();
-  },
-  playClickedHandler: function(e) {
-    e.preventDefault();
-    this.changeView(new pinball.ServoTestView());
-  },
-  controlsClickedHandler: function(e) {
-    e.preventDefault();
-    this.changeView(new pinball.ControlsView());
-  },
-  backClickedHandler: function(e) {
-    e.preventDefault();
-    this.changeView(new this.currentview.previousView());
   }
 });

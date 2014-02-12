@@ -27,20 +27,22 @@ module.exports = function(io, arduino) {
       }
     });
 
-    socket.on('disconnect', function(){
-      game.reset();
-    });
-
     socket.on('arduino.launcher_set', function(data){
       player.arduino.setAngle(data.percentage, function(){
+        player.arduino.listening = true;
 
         game = new Game(player, function(){
           player.arduino.on('game.end', function(){
             var score = game.end();
-            console.log(score);
+            player.arduino.listening = false;
+            socket.emit('arduino.score', {score: score});
           });
         });
 
+
+        socket.on('disconnect', function(){
+          game.reset();
+        });
 
         socket.emit('arduino.angle_set');
       });

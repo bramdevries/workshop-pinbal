@@ -6,7 +6,7 @@ pinball.App = Backbone.View.extend({
     'click [data-action="link"]': 'linkClickedHandler'
   },
   initialize: function() {
-    _.bindAll(this, 'playtime', 'spectator');
+    _.bindAll(this, 'playtime', 'spectator', 'scoreReceived');
 
     this.socket = io.connect(window.location);
 
@@ -15,6 +15,7 @@ pinball.App = Backbone.View.extend({
 
     this.socket.on('arduino.playtime', this.playtime);
     this.socket.on('arduino.spectator', this.spectator);
+    this.socket.on('arduino.score', this.scoreReceived);
   },
   spectator: function(e) {
     // Show the score screen.
@@ -24,6 +25,9 @@ pinball.App = Backbone.View.extend({
     // Show the launch screen.
     this.access_token = data.access_token;
     this.setView(new pinball.LaunchView());
+  },
+  scoreReceived: function(data) {
+    this.setView(new pinball.ScoreView({score: data.score}));
   },
   setView: function(v) {
     v.app = this;

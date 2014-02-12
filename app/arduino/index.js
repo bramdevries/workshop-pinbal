@@ -1,5 +1,6 @@
 var firmata = require('firmata'),
     events  = require('events'),
+    winston = require('winston'),
     Target  = require('./target'),
     _       = require('underscore');
 
@@ -16,6 +17,8 @@ module.exports = Arduino;
 function Arduino (path) {
   _.bindAll(this, 'hitTarget');
   events.EventEmitter.call(this);
+
+  winston.add(winston.transports.File, { filename: 'arduino.log' });
 
 
   this.path = path;
@@ -69,17 +72,25 @@ Arduino.prototype.trigger = function(trigger) {
  * Setup the targets, create a new instance of Target for each pin.
  */
 Arduino.prototype.setup= function() {
+  console.log(this.board);
+  targets = [];
   for (var i = 0; i  < pins.targets.length; i++) {
     var t = new Target(this.board, pins.targets[i]);
-    t.on('target.hit', this.hitTarget);
+    t.once('target.hit', this.hitTarget);
     targets.push(t);
   }
-
   this.targetsHit = 0;
+
+  console.log('Arduino has been configured');
+  console.log(this.board);
 };
 
 Arduino.prototype.reset = function() {
-  targets = [];
+  for (var i = 0; i < targets.length; i++) {
+    targets[i].reset();
+    targets[i] = null;
+  }
+
   this.targetsHit = 0;
 };
 

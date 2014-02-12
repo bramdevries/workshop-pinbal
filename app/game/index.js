@@ -17,3 +17,7 @@ Game.prototype.end = function() {
 
   return score;
 };
+
+Game.prototype.reset = function() {
+  this.player.arduino.reset();
+};

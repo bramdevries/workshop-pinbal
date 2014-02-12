@@ -5,7 +5,7 @@ module.exports = Score;
 function Score() {
   this.start = moment();
   this.base = 5000;
-  this.decay = 0.050;
+  this.decay = 0.005;
   this.score = 0;
 }
 

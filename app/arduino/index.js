@@ -4,7 +4,7 @@ var firmata = require('firmata'),
 var pins = {
   servo: 13,
   triggers: [2, 3],
-  targets: [{hit: 8, led: 9}]
+  targets: [{hit: 8, led: 9}, {hit: 10, led: 11}]
 };
 
 var targets = [];

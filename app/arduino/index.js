@@ -1,9 +1,13 @@
-var firmata = require('firmata');
+var firmata = require('firmata'),
+    Target  = require('./target');
 
 var pins = {
   servo: 13,
-  triggers: [2, 3]
+  triggers: [2, 3],
+  targets: [{hit: 8, led: 9}]
 };
+
+var targets = [];
 
 function Arduino (path) {
   this.path = path;
@@ -21,6 +25,8 @@ Arduino.prototype.connect = function(next) {
     }
 
     self.board = board;
+
+    self.setupTargets();
 
     next();
   });
@@ -43,6 +49,15 @@ Arduino.prototype.trigger = function(trigger) {
     setTimeout(function(){
       board.digitalWrite(pin, board.LOW);
     }, 200);
+  }
+};
+
+/**
+ * Setup the targets, create a new instance of Target for each pin.
+ */
+Arduino.prototype.setupTargets = function() {
+  for (var i = 0; i  < pins.targets.length; i++) {
+    targets.push(new Target(this.board, pins.targets[i]));
   }
 };
 

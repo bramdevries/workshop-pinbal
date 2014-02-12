@@ -1,23 +1,26 @@
-var _      = require('underscore'),
+var five    = require('johnny-five'),
+    _       = require('underscore'),
     events = require('events');
 
 module.exports = Target;
 
-function Target(board, pins) {
+function Target(options) {
+  events.EventEmitter.call(this);
   _.bindAll(this, 'gotHit');
 
-  events.EventEmitter.call(this);
-
-  this.board = board;
-  this.led = pins.led;
-  this.hit = pins.hit;
-
   this.isHit = false;
+  this.board = options.board;
 
-  this.board.pinMode(this.hit, this.board.MODES.INPUT);
-  this.board.pinMode(this.led, this.board.MODES.OUTPUT);
+  // A target always has an input pin and output pin (Led).
+  this.output = new five.Led({
+    pin: options.output
+  });
 
-  this.board.digitalRead(this.hit, this.gotHit);
+  this.input = new five.Pin({
+    pin: options.input
+  });
+
+  this.input.read(this.gotHit);
 }
 
 Target.super_ = events.EventEmitter;
@@ -28,15 +31,13 @@ Target.prototype = Object.create(events.EventEmitter.prototype, {
   }
 });
 
-Target.prototype.gotHit = function(d) {
-  if (!this.isHit && d === 1) {
-    this.isHit = true;
-    this.board.digitalWrite(this.led, this.board.HIGH);
-    this.emit('target.hit', this);
-  }
+Target.prototype.gotHit = function(val){
+  this.emit('target.hit', this, val);
 };
 
 Target.prototype.reset = function() {
+
+  console.log('reset pin ' + this.input.pin);
+  this.output.off();
   this.isHit = false;
-  this.board.digitalWrite(this.led, this.board.LOW);
 };

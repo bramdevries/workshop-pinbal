@@ -1,5 +1,6 @@
 var Player = require('../player'),
-    Game   = require('../game');
+    Game   = require('../game'),
+    _      = require('underscore');
 
 var clients = 0,
     socket,
@@ -11,16 +12,12 @@ module.exports = function(io, arduino) {
   io.sockets.on('connection', function(socket){
     socket = socket;
 
-    if (cleanArduino !== null) {
-      cleanArduino = arduino;
-    }
-
     if (clients >= 1) {
       socket.emit('arduino.spectator');
     }
     else {
       // Create a new player.
-      player = new Player(cleanArduino);
+      player = new Player(arduino);
       socket.emit('arduino.playtime', {access_token: player.access_token});
     }
 
@@ -36,14 +33,14 @@ module.exports = function(io, arduino) {
 
     socket.on('arduino.launcher_set', function(data){
       player.arduino.setAngle(data.percentage, function(){
-        // Start new game.
 
-        game = new Game(player);
-        game.player.arduino.setup();
-        game.player.arduino.once('game.end', function(){
-          var score = game.end();
-          console.log(score);
+        game = new Game(player, function(){
+          player.arduino.on('game.end', function(){
+            var score = game.end();
+            console.log(score);
+          });
         });
+
 
         socket.emit('arduino.angle_set');
       });

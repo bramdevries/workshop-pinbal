@@ -1,28 +1,25 @@
-var firmata = require('firmata'),
+var five    = require("johnny-five"),
+    _       = require('underscore'),
     events  = require('events'),
-    winston = require('winston'),
-    Target  = require('./target'),
-    _       = require('underscore');
+    Target  = require('./target');
 
 var pins = {
   servo: 13,
   triggers: [2, 3],
-  targets: [{hit: 8, led: 9}, {hit: 10, led: 11}]
+  targets: [{input: 8, output: 9}, {input: 10, output: 11}]
 };
 
 var targets = [];
 
 module.exports = Arduino;
 
-function Arduino (path) {
-  _.bindAll(this, 'hitTarget');
+function Arduino(path) {
   events.EventEmitter.call(this);
 
-  winston.add(winston.transports.File, { filename: 'arduino.log' });
-
-
+  _.bindAll(this, 'hitTarget');
   this.path = path;
 }
+
 
 Arduino.super_ = events.EventEmitter;
 Arduino.prototype = Object.create(events.EventEmitter.prototype, {
@@ -33,26 +30,26 @@ Arduino.prototype = Object.create(events.EventEmitter.prototype, {
 });
 
 Arduino.prototype.connect = function(next) {
-  var self = this;
-  var board = new firmata.Board(this.path, function(err){
-    if (err) {console.log(err); return;}
+  this.board = new five.Board({
+    port: this.path
+  });
 
-    board.pinMode(pins.servo, board.MODES.SERVO);
+  var self = this;
+  this.board.on("ready", function() {
+
+    var val = 0;
 
     for (var i = 0; i  < pins.triggers.length; i++) {
-      board.pinMode(pins.triggers[i], board.MODES.OUTPUT);
+      this.pinMode(pins.triggers[i], 1);
     }
 
-    self.board = board;
     next();
   });
 };
 
 Arduino.prototype.setAngle = function(perc, next) {
   // Calculate angle
-
   var angle = Math.round(180 * (perc / 100));
-  //this.board.servoWrite(pins.servo, angle);
   next();
 };
 
@@ -60,44 +57,57 @@ Arduino.prototype.trigger = function(trigger) {
   var pin = pins.triggers[trigger - 1];
 
   if (pin !== undefined) {
-    var board = this.board;
-    board.digitalWrite(pin, board.HIGH);
-    setTimeout(function(){
-      board.digitalWrite(pin, board.LOW);
-    }, 200);
+
+    var led = new five.Led({
+      pin: pin
+    });
+
+    led.on();
+
+    this.board.wait(300, function(){
+      led.off();
+    });
   }
 };
 
-/**
- * Setup the targets, create a new instance of Target for each pin.
- */
-Arduino.prototype.setup= function() {
-  console.log(this.board);
+Arduino.prototype.setup = function() {
   targets = [];
-  for (var i = 0; i  < pins.targets.length; i++) {
-    var t = new Target(this.board, pins.targets[i]);
-    t.once('target.hit', this.hitTarget);
+
+  for (var i = 0; i < pins.targets.length; i++) {
+    var t = new Target({
+      input: pins.targets[i].input,
+      output: pins.targets[i].output,
+      board: this.board
+    });
+
+    t.on('target.hit', this.hitTarget);
+
     targets.push(t);
   }
-  this.targetsHit = 0;
 
-  console.log('Arduino has been configured');
-  console.log(this.board);
+  this.targetsHit = 0;
+};
+
+Arduino.prototype.hitTarget = function(target, v) {
+  console.log(target.input.pin + ' got hit');
+  if (!target.isHit && v === 1) {
+
+    target.output.on();
+    target.isHit = true;
+    this.targetsHit++;
+
+    if (this.targetsHit === targets.length) {
+      this.emit('game.end');
+    }
+  }
+
+  //console.log(target.input.pin + ' is ' + v);
 };
 
 Arduino.prototype.reset = function() {
-  for (var i = 0; i < targets.length; i++) {
-    targets[i].reset();
-    targets[i] = null;
-  }
+  _.each(targets, function(target){
+    target.reset();
+  });
 
   this.targetsHit = 0;
-};
-
-Arduino.prototype.hitTarget = function(target) {
-  this.targetsHit++;
-
-  if (this.targetsHit === targets.length) {
-    this.emit('game.end');
-  }
 };

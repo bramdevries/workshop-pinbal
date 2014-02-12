@@ -1,6 +1,9 @@
-var Player = require('../player');
+var Player = require('../player'),
+    Game   = require('../game');
+
 var clients = 0,
     socket,
+    game,
     player;
 
 module.exports = function(io, arduino) {
@@ -24,37 +27,17 @@ module.exports = function(io, arduino) {
 
     socket.on('arduino.launcher_set', function(data){
       player.arduino.setAngle(data.percentage, function(){
+        // Start new game.
+
+        game = new Game(player);
+        game.player.arduino.setup();
+        game.player.arduino.once('game.end', function(){
+          var score = game.end();
+          console.log(score);
+        });
+
         socket.emit('arduino.angle_set');
       });
     });
-
-/*
-    console.log('New client connected');
-   /* /*if (clients.length >= 2) {
-      console.log('Too many clients connected');
-    }*/
-
-   /* // When connecting to the server, look for both Arduino's. Return the connected amount.
-    socket.emit('arduino.devices', {devices: devices});
-
-    // A player selects an arduino, remove it from the available devices. Send back an updated list of devices.
-    socket.on('arduino.selected', function(data){
-      clients.push(new Client(devices.splice(data.device_id - 1)));
-      socket.emit('arduino.update_devices', {devices: devices});
-    });
-
-    socket.on('disconnect', function(){
-      console.log('Game ended');
-    });
-
-    // When disconnecting, end the game.
-/*
-    socket.on('arduino.change', function(data){
-      client.arduino.setAngle(data.angle);
-    });
-
-    socket.on('arduino.controls', function(data){
-      client.arduino.trigger(data.trigger);
-    });*/
   });
 };

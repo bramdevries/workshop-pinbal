@@ -1,5 +1,7 @@
 var firmata = require('firmata'),
-    Target  = require('./target');
+    events  = require('events'),
+    Target  = require('./target'),
+    _       = require('underscore');
 
 var pins = {
   servo: 13,
@@ -9,9 +11,23 @@ var pins = {
 
 var targets = [];
 
+module.exports = Arduino;
+
 function Arduino (path) {
+  _.bindAll(this, 'hitTarget');
+  events.EventEmitter.call(this);
+
+
   this.path = path;
 }
+
+Arduino.super_ = events.EventEmitter;
+Arduino.prototype = Object.create(events.EventEmitter.prototype, {
+  constructor: {
+    value: Arduino,
+    enumerable: false
+  }
+});
 
 Arduino.prototype.connect = function(next) {
   var self = this;
@@ -25,9 +41,6 @@ Arduino.prototype.connect = function(next) {
     }
 
     self.board = board;
-
-    self.setupTargets();
-
     next();
   });
 };
@@ -55,10 +68,25 @@ Arduino.prototype.trigger = function(trigger) {
 /**
  * Setup the targets, create a new instance of Target for each pin.
  */
-Arduino.prototype.setupTargets = function() {
+Arduino.prototype.setup= function() {
   for (var i = 0; i  < pins.targets.length; i++) {
-    targets.push(new Target(this.board, pins.targets[i]));
+    var t = new Target(this.board, pins.targets[i]);
+    t.on('target.hit', this.hitTarget);
+    targets.push(t);
   }
+
+  this.targetsHit = 0;
 };
 
-module.exports = Arduino;
+Arduino.prototype.reset = function() {
+  targets = [];
+  this.targetsHit = 0;
+};
+
+Arduino.prototype.hitTarget = function(target) {
+  this.targetsHit++;
+
+  if (this.targetsHit === targets.length) {
+    this.emit('game.end');
+  }
+};

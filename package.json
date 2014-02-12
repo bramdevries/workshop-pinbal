@@ -26,6 +26,7 @@
     "express-hbs": "*",
     "socket.io": "*",
     "hat": "0.0.3",
-    "underscore": "~1.6.0"
+    "underscore": "~1.6.0",
+    "moment": "~2.5.1"
   }
 }

@@ -1,7 +1,12 @@
-var _ = require('underscore');
+var _      = require('underscore'),
+    events = require('events');
+
+module.exports = Target;
 
 function Target(board, pins) {
   _.bindAll(this, 'gotHit');
+
+  events.EventEmitter.call(this);
 
   this.board = board;
   this.led = pins.led;
@@ -15,11 +20,23 @@ function Target(board, pins) {
   this.board.digitalRead(this.hit, this.gotHit);
 }
 
+Target.super_ = events.EventEmitter;
+Target.prototype = Object.create(events.EventEmitter.prototype, {
+  constructor: {
+    value: Target,
+    enumerable: false
+  }
+});
+
 Target.prototype.gotHit = function(d) {
   if (!this.isHit && d === 1) {
     this.isHit = true;
     this.board.digitalWrite(this.led, this.board.HIGH);
+    this.emit('target.hit', this);
   }
 };
 
-module.exports = Target;
+Target.prototype.reset = function() {
+  this.isHit = false;
+  this.board.digitalWrite(this.led, this.board.LOW);
+};

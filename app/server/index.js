@@ -49,6 +49,7 @@ function setup(server) {
  */
 function setupArduino() {
   var arduino = new Arduino('/dev/tty.usbmodemfd121');
+
   arduino.connect(function(){
     sockets(io, arduino);
   });

@@ -10,7 +10,7 @@ pinball.LaunchView = Backbone.View.extend({
   id: 'launch',
   template: templates.launch,
   initialize: function(options) {
-    _.bindAll(this, 'launcherSelectedHandler');
+    _.bindAll(this, 'launcherSelectedHandler', 'angleSetHandler');
     this.launcher = new pinball.Launcher();
     this.launcher.emitter.on('launcher.selected', this.launcherSelectedHandler);
   },
@@ -21,5 +21,9 @@ pinball.LaunchView = Backbone.View.extend({
   },
   launcherSelectedHandler: function(perc) {
     this.app.socket.emit('arduino.launcher_set', {percentage: perc});
+    this.app.socket.on('arduino.angle_set', this.angleSetHandler);
+  },
+  angleSetHandler: function() {
+    this.app.setView(new pinball.ControlsView());
   }
 });

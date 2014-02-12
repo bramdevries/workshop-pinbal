@@ -6,6 +6,7 @@ var clients = 0,
 module.exports = function(io, arduino) {
   io.sockets.on('connection', function(socket){
     socket = socket;
+
     if (clients >= 1) {
       socket.emit('arduino.spectator');
     }
@@ -22,7 +23,9 @@ module.exports = function(io, arduino) {
     });
 
     socket.on('arduino.launcher_set', function(data){
-      console.log(data);
+      player.arduino.setAngle(data.percentage, function(){
+        socket.emit('arduino.angle_set');
+      });
     });
 
 /*

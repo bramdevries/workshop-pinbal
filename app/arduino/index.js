@@ -26,8 +26,12 @@ Arduino.prototype.connect = function(next) {
   });
 };
 
-Arduino.prototype.setAngle = function(angle) {
-  this.board.servoWrite(pins.servo, angle);
+Arduino.prototype.setAngle = function(perc, next) {
+  // Calculate angle
+
+  var angle = Math.round(180 * (perc / 100));
+  //this.board.servoWrite(pins.servo, angle);
+  next();
 };
 
 Arduino.prototype.trigger = function(trigger) {

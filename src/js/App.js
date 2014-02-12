@@ -9,6 +9,10 @@ pinball.App = Backbone.View.extend({
     _.bindAll(this, 'playtime', 'spectator');
 
     this.socket = io.connect(window.location);
+
+    /*this.loader = new pinball.LoadingView(this.$el);
+    this.loader.start('Setting up connection to Arduino');*/
+
     this.socket.on('arduino.playtime', this.playtime);
     this.socket.on('arduino.spectator', this.spectator);
   },

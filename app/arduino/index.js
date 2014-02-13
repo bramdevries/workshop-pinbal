@@ -6,10 +6,12 @@ var five    = require("johnny-five"),
 var pins = {
   servo: 13,
   triggers: [2, 3],
-  targets: [{input: 8, output: 9}, {input: 10, output: 11}]
+  targets: [{input: 8, output: 9}, {input: 10, output: 11}],
+  ir: 2
 };
 
 var targets = [];
+var motion;
 
 module.exports = Arduino;
 
@@ -18,6 +20,7 @@ function Arduino(path) {
 
   _.bindAll(this, 'hitTarget');
   this.path = path;
+  this.listening = false;
 }
 
 
@@ -30,18 +33,18 @@ Arduino.prototype = Object.create(events.EventEmitter.prototype, {
 });
 
 Arduino.prototype.connect = function(next) {
-  this.board = new five.Board({
-    port: this.path
-  });
+  this.board = new five.Board();
 
   var self = this;
   this.board.on("ready", function() {
 
-    var val = 0;
-
     for (var i = 0; i  < pins.triggers.length; i++) {
       this.pinMode(pins.triggers[i], 1);
     }
+
+    // Setup Servo
+    self.servo = new five.Servo(pins.servo);
+    self.servo.min();
 
     next();
   });
@@ -50,7 +53,11 @@ Arduino.prototype.connect = function(next) {
 Arduino.prototype.setAngle = function(perc, next) {
   // Calculate angle
   var angle = Math.round(180 * (perc / 100));
-  next();
+  this.servo.to(angle);
+
+  if (next) {
+    next();
+  }
 };
 
 Arduino.prototype.trigger = function(trigger) {
@@ -64,7 +71,7 @@ Arduino.prototype.trigger = function(trigger) {
 
     led.on();
 
-    this.board.wait(300, function(){
+    this.board.wait(100, function(){
       led.off();
     });
   }
@@ -72,7 +79,6 @@ Arduino.prototype.trigger = function(trigger) {
 
 Arduino.prototype.setup = function() {
   targets = [];
-
   for (var i = 0; i < pins.targets.length; i++) {
     var t = new Target({
       input: pins.targets[i].input,
@@ -89,8 +95,7 @@ Arduino.prototype.setup = function() {
 };
 
 Arduino.prototype.hitTarget = function(target, v) {
-  console.log(target.input.pin + ' got hit');
-  if (!target.isHit && v === 1) {
+  if (!target.isHit && v === 1 && this.listening) {
 
     target.output.on();
     target.isHit = true;

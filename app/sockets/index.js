@@ -1,25 +1,62 @@
-var Player = require('../player'),
-    Game   = require('../game'),
-    _      = require('underscore');
+var Player  = require('../player'),
+    Game    = require('../game'),
+    Arduino = require('../arduino'),
+    _       = require('underscore');
 
-var clients = 0,
-    socket,
+var clients = [],
     game,
     player,
-    cleanArduino;
+    arduino,
+    io;
 
-module.exports = function(io, arduino) {
+module.exports = function(io) {
+
+
+  io = io;
+
+
+  function startPlaying(socket) {
+    player = new Player(arduino);
+    //player.arduino.setAngle(0);
+    socket.emit('arduino.playtime', {access_token: player.access_token});
+  }
+
+  function checkPositionInQueue(socket) {
+    if (socket !== undefined) {
+      if (clients.indexOf(socket) === 0) {
+        if (arduino === undefined) {
+          arduino = new Arduino('/dev/tty.usbmodemfd121');
+          arduino.connect(function(){
+            startPlaying(socket);
+          });
+        }
+        else {
+          startPlaying(socket);
+        }
+      }
+      else {
+        socket.emit('arduino.spectator', {position: clients.indexOf(socket)});
+      }
+    }
+  }
+
+
   io.sockets.on('connection', function(socket){
-    socket = socket;
 
-    if (clients >= 1) {
-      socket.emit('arduino.spectator');
-    }
-    else {
-      // Create a new player.
-      player = new Player(arduino);
-      socket.emit('arduino.playtime', {access_token: player.access_token});
-    }
+    clients.push(socket);
+
+    checkPositionInQueue(socket);
+
+    socket.on('disconnect', function(socket){
+      clients.splice(clients.indexOf(socket));
+      _.each(clients, function(s){
+        checkPositionInQueue(s);
+      });
+    });
+
+    socket.on('queue.check', function(){
+      checkPositionInQueue(socket);
+    });
 
     socket.on('arduino.trigger', function(data){
       if (data.access_token === player.access_token) {
@@ -27,22 +64,33 @@ module.exports = function(io, arduino) {
       }
     });
 
-    socket.on('disconnect', function(){
-      game.reset();
-    });
-
     socket.on('arduino.launcher_set', function(data){
-      player.arduino.setAngle(data.percentage, function(){
+      player.arduino.once('launcher.set', function(){
+        setTimeout(function(){
+          player.arduino.setAngle(0);
+          player.arduino.listening = true;
 
-        game = new Game(player, function(){
-          player.arduino.on('game.end', function(){
-            var score = game.end();
-            console.log(score);
+          game = new Game(player, function(){
+            player.arduino.on('game.end', function(){
+              var score = game.end();
+              player.arduino.listening = false;
+              socket.emit('arduino.score', {score: score});
+            });
           });
-        });
 
 
-        socket.emit('arduino.angle_set');
+          socket.on('disconnect', function(){
+            game.reset();
+          });
+
+          socket.emit('arduino.angle_set');
+
+
+        }, 500);
+      });
+
+      player.arduino.setAngle(data.percentage, function(){
+        player.arduino.emit('launcher.set');
       });
     });
   });

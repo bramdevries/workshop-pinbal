@@ -4,9 +4,10 @@ pinball.ScoreView = Backbone.View.extend({
   id: 'score',
   template: templates.score,
   initialize: function(options) {
+    this.score = options.score;
   },
   render: function() {
-    this.$el.html(this.template({players: this.players}));
+    this.$el.html(this.template({score: this.score}));
     return this;
   }
 });

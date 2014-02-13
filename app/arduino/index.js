@@ -4,13 +4,14 @@ var five    = require("johnny-five"),
     Target  = require('./target');
 
 var pins = {
-  servo: 12,
+  servo: 13,
   triggers: [2, 3],
   targets: [{input: 8, output: 9}, {input: 10, output: 11}],
-  ir: {receiver: 'A0', transmit: 4}
+  ir: 2
 };
 
 var targets = [];
+var motion;
 
 module.exports = Arduino;
 
@@ -32,9 +33,7 @@ Arduino.prototype = Object.create(events.EventEmitter.prototype, {
 });
 
 Arduino.prototype.connect = function(next) {
-  this.board = new five.Board({
-    port: this.path
-  });
+  this.board = new five.Board();
 
   var self = this;
   this.board.on("ready", function() {
@@ -43,21 +42,9 @@ Arduino.prototype.connect = function(next) {
       this.pinMode(pins.triggers[i], 1);
     }
 
-    var irLed = new five.Led(pins.ir.transmit);
-    irLed.on();
-
+    // Setup Servo
     self.servo = new five.Servo(pins.servo);
     self.servo.min();
-
-    //
-
-    /*var irLed
-    // IR Receiver
-    analog = new five.Pin(pins.drop.receiver);
-
-    analog.read(function(v) {
-       console.log(v);
-    });*/
 
     next();
   });

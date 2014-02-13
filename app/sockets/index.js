@@ -17,7 +17,7 @@ module.exports = function(io) {
 
   function startPlaying(socket) {
     player = new Player(arduino);
-    player.arduino.setAngle(0);
+    //player.arduino.setAngle(0);
     socket.emit('arduino.playtime', {access_token: player.access_token});
   }
 

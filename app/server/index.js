@@ -39,20 +39,8 @@ function setup(server) {
   });
 
   io = io.listen(s);
-
-  setupArduino();
+  sockets(io)
   server.get('/', front.index);
-}
-
-/**
- * Connect the arduino.
- */
-function setupArduino() {
-  var arduino = new Arduino('/dev/tty.usbmodemfd121');
-
-  arduino.connect(function(){
-    sockets(io, arduino);
-  });
 }
 
 function init(app) {

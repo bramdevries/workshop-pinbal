@@ -6,7 +6,8 @@ var five    = require("johnny-five"),
 var pins = {
   servo: 13,
   triggers: [2, 3],
-  targets: [{input: 8, output: 9}, {input: 10, output: 11}]
+  targets: [{input: 8, output: 9}, {input: 10, output: 11}],
+  ir: {receiver: 'A0', transmit: 4}
 };
 
 var targets = [];
@@ -38,11 +39,22 @@ Arduino.prototype.connect = function(next) {
   var self = this;
   this.board.on("ready", function() {
 
-    var val = 0;
-
     for (var i = 0; i  < pins.triggers.length; i++) {
       this.pinMode(pins.triggers[i], 1);
     }
+
+    var irLed = new five.Led(pins.ir.transmit);
+    irLed.on();
+
+    //
+
+    /*var irLed
+    // IR Receiver
+    analog = new five.Pin(pins.drop.receiver);
+
+    analog.read(function(v) {
+       console.log(v);
+    });*/
 
     next();
   });
@@ -65,7 +77,7 @@ Arduino.prototype.trigger = function(trigger) {
 
     led.on();
 
-    this.board.wait(300, function(){
+    this.board.wait(100, function(){
       led.off();
     });
   }

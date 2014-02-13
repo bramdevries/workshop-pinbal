@@ -36,8 +36,6 @@ Target.prototype.gotHit = function(val){
 };
 
 Target.prototype.reset = function() {
-
-  console.log('reset pin ' + this.input.pin);
   this.output.off();
   this.isHit = false;
 };

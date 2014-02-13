@@ -4,7 +4,7 @@ var five    = require("johnny-five"),
     Target  = require('./target');
 
 var pins = {
-  servo: 13,
+  servo: 12,
   triggers: [2, 3],
   targets: [{input: 8, output: 9}, {input: 10, output: 11}],
   ir: {receiver: 'A0', transmit: 4}
@@ -46,6 +46,9 @@ Arduino.prototype.connect = function(next) {
     var irLed = new five.Led(pins.ir.transmit);
     irLed.on();
 
+    self.servo = new five.Servo(pins.servo);
+    self.servo.min();
+
     //
 
     /*var irLed
@@ -63,7 +66,11 @@ Arduino.prototype.connect = function(next) {
 Arduino.prototype.setAngle = function(perc, next) {
   // Calculate angle
   var angle = Math.round(180 * (perc / 100));
-  next();
+  this.servo.to(angle);
+
+  if (next) {
+    next();
+  }
 };
 
 Arduino.prototype.trigger = function(trigger) {

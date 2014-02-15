@@ -4,10 +4,10 @@ var five    = require("johnny-five"),
     Target  = require('./target');
 
 var pins = {
-  servo: 13,
+  servo: 4,
   triggers: [2, 3],
   targets: [{input: 8, output: 9}, {input: 10, output: 11}],
-  ir: 2
+  ir: 5
 };
 
 var targets = [];
@@ -45,6 +45,20 @@ Arduino.prototype.connect = function(next) {
     // Setup Servo
     self.servo = new five.Servo(pins.servo);
     self.servo.min();
+
+    // Setup Motion Detectors
+
+    self.motion = new five.IR.Motion(pins.ir);
+
+    this.repl.inject({
+      motion: self.motion
+    });
+
+    self.motion.on("motionstart", function(err, ts) {
+      if (self.listening) {
+       self.emit('game.end', self.targetsHit);
+      }
+    });
 
     next();
   });
@@ -94,6 +108,7 @@ Arduino.prototype.setup = function() {
   this.targetsHit = 0;
 };
 
+// Reed contact
 Arduino.prototype.hitTarget = function(target, v) {
   if (!target.isHit && v === 1 && this.listening) {
 
@@ -102,7 +117,7 @@ Arduino.prototype.hitTarget = function(target, v) {
     this.targetsHit++;
 
     if (this.targetsHit === targets.length) {
-      this.emit('game.end');
+      this.emit('game.end', this.targetsHit);
     }
   }
 

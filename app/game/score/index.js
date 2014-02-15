@@ -4,16 +4,23 @@ module.exports = Score;
 
 function Score() {
   this.start = moment();
-  this.base = 5000;
-  this.decay = 0.005;
+  this.pinScore = 2500;
   this.score = 0;
 }
 
-Score.prototype.stop = function() {
+Score.prototype.stop = function(pins) {
   var finish = moment();
-  var difference = finish.diff(this.start, 'seconds');
+  var duration = finish.diff(this.start, 'seconds');
 
-  this.score = this.base - (this.base * (this.decay * difference));
+  // Get a point for each pin hit.
+  var base = this.pinScore * pins;
+
+  // Take into account the duration of the game.
+
+  this.score = base + (base / duration);
+  this.score = Math.round(this.score);
+
+//  this.score = this.base - (this.base * (this.decay * difference)) + (this.pinScore * pins);
 
   this.score = (this.score < 0) ? 0 : this.score;
 

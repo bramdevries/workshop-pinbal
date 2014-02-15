@@ -17,7 +17,6 @@ module.exports = function(io) {
 
   function startPlaying(socket) {
     player = new Player(arduino);
-    //player.arduino.setAngle(0);
     socket.emit('arduino.playtime', {access_token: player.access_token});
   }
 
@@ -71,9 +70,10 @@ module.exports = function(io) {
           player.arduino.listening = true;
 
           game = new Game(player, function(){
-            player.arduino.on('game.end', function(){
-              var score = game.end();
+            player.arduino.on('game.end', function(pins){
+              var score = game.end(pins);
               player.arduino.listening = false;
+              console.log(score);
               socket.emit('arduino.score', {score: score});
             });
           });
@@ -84,7 +84,6 @@ module.exports = function(io) {
           });
 
           socket.emit('arduino.angle_set');
-
 
         }, 500);
       });

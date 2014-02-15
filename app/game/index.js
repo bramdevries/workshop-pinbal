@@ -18,8 +18,13 @@ function Game(player, next) {
   }
 }
 
-Game.prototype.end = function() {
-  var score = this.score.stop();
+/**
+ * Calculate the score and return it. Take into account how many pins have been 'hit'.
+ * @return int Score
+ */
+Game.prototype.end = function(pins) {
+  console.log(pins);
+  var score = this.score.stop(pins);
   return score;
 };
 

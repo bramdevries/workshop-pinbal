@@ -11,7 +11,7 @@ These steps are the same for Windows and OS X
 5. Navigate to this folder in your terminal/command line.
 6. Run `npm install`
 7. Run `bower install`
-8. Run `gulp production`
+8. Run `gulp` to compile assets.
 9. Plug in the Arduino in an USB port.
 10. Run `node index`
 11. Navigate to [localhost:3000](http://localhost:3000) in a browser

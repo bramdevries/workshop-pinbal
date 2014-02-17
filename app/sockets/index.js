@@ -73,7 +73,6 @@ module.exports = function(io) {
             player.arduino.on('game.end', function(pins){
               var score = game.end(pins);
               player.arduino.listening = false;
-              console.log(score);
               socket.emit('arduino.score', {score: score});
             });
           });

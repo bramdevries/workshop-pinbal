@@ -18,3 +18,8 @@ These steps are the same for Windows and OS X
 12. Enjoy!
 
 ## Arduino setup
+
+![Arduino setup](http://s.2to1.be/TxLm/arduino_setup.png)
+
+* **Note**: The LED above the IR Receiver should be an IR Led.
+* **Note**: You can add as many targets as long as you have pins (2 pins/target).

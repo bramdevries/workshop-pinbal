@@ -6,7 +6,7 @@ var five    = require("johnny-five"),
 var pins = {
   servo: 4,
   triggers: [2, 3],
-  targets: [{input: 8, output: 9}, {input: 10, output: 11}],
+  targets: [{input: 8, output: 9}],
   ir: 5
 };
 

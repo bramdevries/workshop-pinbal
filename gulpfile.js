@@ -83,14 +83,22 @@ gulp.task('handlebars', function () {
  */
 gulp.task('default', function () {
 
-  gulp.run(['styles', 'handlebars', 'scripts']);
+  gulp.run('styles', 'handlebars', 'scripts');
 
   server.listen(35729, function(err){
     if (err) {return console.log(err);}
+
     gulp.watch('./src/scss/**/*.scss', ['styles']);
     // Restart gulp when changing this file.
     gulp.watch('./gulpfile.js', ['default']);
     gulp.watch('./src/js/**/*.js', ['scripts']);
     gulp.watch('./src/templates/*.hbs', ['handlebars']);
   });
+});
+
+gulp.task('build', function(){
+  gulp.run('styles:build');
+  gulp.src('./public/js/app.js')
+    .pipe(uglify())
+    .pipe(gulp.dest('./public/js'));
 });

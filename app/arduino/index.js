@@ -10,16 +10,15 @@ var pins = {
   ir: 5
 };
 
-var targets = [];
-var motion;
+var targets = [],
+    motion;
 
 module.exports = Arduino;
 
-function Arduino(path) {
+function Arduino() {
   events.EventEmitter.call(this);
 
   _.bindAll(this, 'hitTarget');
-  this.path = path;
   this.listening = false;
 }
 
@@ -60,18 +59,29 @@ Arduino.prototype.connect = function(next) {
       }
     });
 
+    // Setup Targets
+    self.setup();
+
     next();
   });
 };
 
 Arduino.prototype.setAngle = function(perc, next) {
-  // Calculate angle
   var angle = Math.round(180 * (perc / 100));
+
+  // `Charge` it.
   this.servo.to(angle);
 
-  if (next) {
-    next();
-  }
+  self = this;
+  // `Launch` it
+  setTimeout(function(){
+    self.servo.to(0);
+
+    if (next) {
+      next();
+    }
+
+  }, 800);
 };
 
 Arduino.prototype.trigger = function(trigger) {
@@ -120,8 +130,6 @@ Arduino.prototype.hitTarget = function(target, v) {
       this.emit('game.end', this.targetsHit);
     }
   }
-
-  //console.log(target.input.pin + ' is ' + v);
 };
 
 Arduino.prototype.reset = function() {
@@ -130,4 +138,5 @@ Arduino.prototype.reset = function() {
   });
 
   this.targetsHit = 0;
+  this.listening = false;
 };

@@ -20,7 +20,7 @@ pinball.LaunchView = Backbone.View.extend({
     return this;
   },
   launcherSelectedHandler: function(perc) {
-    this.app.socket.emit('arduino.launcher_set', {percentage: perc});
+    this.app.socket.emit('arduino.launcher_set', {percentage: perc, access_token: this.app.access_token});
     this.app.socket.on('arduino.angle_set', this.angleSetHandler);
   },
   angleSetHandler: function() {

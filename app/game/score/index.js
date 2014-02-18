@@ -24,5 +24,7 @@ Score.prototype.stop = function(pins) {
 
   this.score = (this.score < 0) ? 0 : this.score;
 
+  console.log(this.score);
+
   return this.score;
 };

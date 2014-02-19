@@ -3,13 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-  <title>Pinball</title>
+  <title>PINBOWL</title>
 
   <link rel="stylesheet" href="css/style.css"/>
   <script type="text/javascript" src="//use.typekit.net/cdj8qdu.js"></script>
   <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
 </head>
 <body>
+  <div id="container">
+
+    {{> bg}}
+    <div id="page-logo-wrapper" class="hidden">
+      <img src="img/logo.png" alt="Pinbowl" title="Pinbowl">
+    </div>
+  </div>
+
+
   <script src="/socket.io/socket.io.js"></script>
   <script src="js/vendors/jquery/dist/jquery.min.js"></script>
   <script src="js/vendors/handlebars/handlebars.runtime.js"></script>

@@ -6,7 +6,7 @@ var five    = require("johnny-five"),
 var pins = {
   servo: 4,
   triggers: [2, 3],
-  targets: [{input: 8, output: 9}],
+  targets: [{input: 8, output: 9}, {input: 10, output: 11}],
   ir: 5
 };
 
@@ -125,6 +125,8 @@ Arduino.prototype.hitTarget = function(target, v) {
     target.output.on();
     target.isHit = true;
     this.targetsHit++;
+
+    this.emit('target.hit', {id: targets.indexOf(target)});
 
     if (this.targetsHit === targets.length) {
       this.emit('game.end', this.targetsHit);

@@ -1,23 +1,44 @@
 pinball.ControlsView = Backbone.View.extend({
   tagName: 'div',
-  className: 'container fade',
-  id: 'home',
+  className: 'full',
+  id: 'controls',
   template: templates.controls,
   hasBack: true,
   events: {
     'click [data-action="trigger"]': 'triggerClickedHandler'
   },
   initialize: function() {
-    this.previousView = pinball.HomeView;
+    _.bindAll(this, 'targetHit');
   },
   render: function() {
     this.$el.html(this.template());
+    this.app.socket.on('target.hit', this.targetHit);
     return this;
+  },
+  targetHit: function(id) {
+    this.$el.find('[data-pin=' + id.id + ']').addClass('hit');
   },
   triggerClickedHandler: function(e) {
     e.preventDefault();
-    var trigger = $(e.currentTarget).data('trigger');
+    var trigger = $(e.currentTarget);
 
-    this.app.socket.emit('arduino.trigger', {trigger: trigger, access_token: this.app.access_token});
+    var deg = '-=15deg';
+
+    if (trigger.hasClass('right')) {
+      deg = '+=15deg';
+    }
+
+    if (!trigger.hasClass('disabled')) {
+      trigger.addClass('disabled');
+      trigger.transition({
+        rotate: '0deg'
+      }, 100).transition({
+        rotate: (trigger.hasClass('right')) ? '-15deg' : '15deg'
+      }, function(){
+        trigger.removeClass('disabled');
+      });
+
+      this.app.socket.emit('arduino.trigger', {trigger: trigger.data('trigger'), access_token: this.app.access_token});
+    }
   }
 });

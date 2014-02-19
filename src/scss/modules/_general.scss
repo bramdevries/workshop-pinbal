@@ -1,82 +1,287 @@
-$font: "brandon-grotesque", sans-serif;
-
 *, *:before, *:after {
   box-sizing: border-box;
 }
 
-%center, .center {
+@mixin vertical-align {
   position: relative;
   top: 50%;
   @include transform(translateY(-50%));
 }
 
-html, body {
-  height: 100%;
+@mixin horizontal-align {
+  position: relative;
+  left: 50%;
+  @include transform(translateX(-50%));
 }
 
 body {
-  @include linear-gradient(to bottom, #66cbed, #658ded);
-  color: white;
-  font-family: $font;
-  font-weight: 100;
-  font-size: 160%;
+  background-image: url("../img/bg.png");
+  font-family: "league-gothic", Arial, sans-serif;
+  font-size: 62.5%;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-h1 {
-  font-size: em(20);
-  margin-bottom: 30px;
-}
-
-.container {
-  max-width: 500px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 20px;
+html, body, #container, #bg, #app, .full {
   height: 100%;
 }
 
-.help {
-  text-align: center;
-  font-size: em(35);
-  font-weight: 100;
-  line-height: 1.5;
+#container, #bg, #app {
+  width: 100%;
 }
 
-.failed {
-  @extend .fade;
-  text-align: center;
-  .help {
-    font-size: em(25);
-    margin-bottom: 20px;
+#container {
+  box-shadow: inset 0 0 250px rgba(#000, .6);
+}
+
+.hidden {
+  display: none;
+}
+
+#bg {
+  opacity: 0.5;
+  position: absolute;
+  #line {
+    width: 100%;
+    height: 5px;
+    background-color: #fcfcf6;
+    position: absolute;
+    bottom: 5%;
+  }
+  #triangles {
+    .triangle-wrapper {
+      float: left;
+      width: 14.285714286%;
+      .triangle {
+        margin: 0 auto;
+        width: 0;
+        height: 0;
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 50px solid #fcfcf6;
+        @media only screen and (max-width: 950px){
+          border-left: 6px solid transparent;
+          border-right: 6px solid transparent;
+          border-bottom: 25px solid #fcfcf6;
+        }
+
+        @media only screen and (max-height: 600px){
+          border-left: 3px solid transparent;
+          border-right: 3px solid transparent;
+          border-bottom: 12.5px solid #fcfcf6;
+        }
+      }
+      &:nth-of-type(1),&:nth-of-type(7){
+        margin-top:110px;
+      }
+
+      &:nth-of-type(2),&:nth-of-type(6){
+        margin-top:90px;
+      }
+
+      &:nth-of-type(3),&:nth-of-type(5){
+        margin-top:70px;
+      }
+
+      &:nth-of-type(4){
+        margin-top: 50px;
+      }
+      @media only screen and (max-height: 600px){
+
+        &:nth-of-type(1),&:nth-of-type(7){
+          margin-top:50px;
+        }
+
+        &:nth-of-type(2),&:nth-of-type(6){
+          margin-top:40px;
+        }
+
+        &:nth-of-type(3),&:nth-of-type(5){
+          margin-top:30px;
+        }
+
+        &:nth-of-type(4){
+          margin-top: 20px;
+        }
+      }
+    }
   }
 }
 
-.fade {
-  animation: fadeIn .2s $ease-in-out-sine;
+img {
+  width: 100%;
 }
 
-.actions {
-  @extend %center;
-
-  .btn {
+#app {
+  position: absolute;
+  #logo-wrapper {
     margin: 0 auto;
+    width: 20%;
     display: block;
-    max-width: 200px;
-    text-align: center;
-    margin-bottom: 20px;
+    @media only screen and (max-width: 950px){
+      width: 30%;
+    }
+
+    @media only screen and (max-width: 450px){
+      width: 60%;
+    }
   }
 }
 
-@include keyframes(fadeIn) {
-  from {
-    opacity: 0;
+#page-logo-wrapper{
+  width: 10%;
+  position: absolute;
+  top: 3%;
+  left:50%;
+  margin-left: -5%;
+
+  @media only screen and (max-width: 950px){
+    width: 20%;
+    margin-left: -10%;
   }
-  to {
-    opacity: 1;
+
+  @media only screen and (max-width: 500px){
+    // width: 30%;
+    // margin-left: -15%;
+  }
+
+  @media only screen and (max-width: 320px){
+    width: 38%;
+    margin-left: -19%;
+  }
+
+  @media only screen and (max-height: 300px){
+    width: 10%;
+    margin-left: -5%;
+  }
+}
+
+.center {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  @include transform(translateX(-50%) translateY(-50%));
+}
+
+.btn {
+  &.new {
+    position: relative;
+    bottom: 0;
+    margin : 30px auto;
+    display: block;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #e4e3dd;
+    background-image: url("../img/button.png");
+    width: 253px;
+    height: 64px;
+    font-size: 3.2em;
+    letter-spacing: .2em;
+    padding-top: 17px;
+    transition: all $ease-in-out-sine .2s;
+    &:hover{
+      background-image: url("../img/buttonhover.png");
+    }
+
+    @media only screen and (max-width: 450px){
+      transform: scale(0.7);
+    }
+  }
+}
+
+h1 {
+  font-size: 5em;
+  letter-spacing: .04em;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.launcher-container {
+  max-width: 600px;
+  padding: 20px;
+  width: 100%;
+  margin: 0 auto;
+  height: 70px;
+  cursor: pointer;
+  .launcher {
+    border: 3px solid black;
+    height: inherit;
+    width: 100%;
+    overflow: hidden;
+    .progress {
+      background: #1c666b;
+      height: inherit;
+      width: 0%;
+      &.bad {
+        background: #811310;
+      }
+    }
+  }
+}
+
+#flippers {
+  position: relative;
+  z-index: 100;
+  .flipper {
+    background: url('../img/flipper-left.png') no-repeat;
+    float: left;
+    @include hide-text();
+    $scale: 0.4;
+    width: 795px * $scale;
+    height: 211px * $scale;
+    background-size: 100%;
+    margin-left: 10%;
+    @include transform(rotate(15deg));
+    &.right {
+      float: right;
+      background-image: url('../img/flipper-right.png');
+      margin-left: 0;
+      margin-right: 10%;
+      @include transform(rotate(-15deg))
+    }
+  }
+}
+
+#score {
+  -webkit-backface-visibility: hidden;
+  margin-top: -20px;
+  h2 {
+    text-align: center;
+    margin: 0 auto;
+    font-size: 5em;
+    color: #025b5e;
+    border-bottom: 3px solid #025b5e;
+    padding: 0 4px 5px 4px;
+    max-width: 8%;
+    width: 100%;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    margin-bottom: 10px;
+  }
+
+  #pins {
+    width: 24vw;
+    margin: 0 auto;
+    opacity: 0.8;
+    @include clearfix();
+    .row {
+      @include clearfix();
+      margin: 0 auto;
+      width: auto;
+      display: flex;
+      flex-flow: row;
+      justify-content: center;
+    }
+    .pin {
+      width: 3vw;
+      height: 3vw;
+      background-color: #000;
+      margin: 1.5vw;
+      float: left;
+      border-radius: 5em;
+      &.hit {
+        background-color: #025B53;
+      }
+    }
   }
 }

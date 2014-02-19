@@ -45,6 +45,10 @@ module.exports = function(io) {
       gameEnd(socket, pins);
     });
 
+    arduino.on('target.hit', function(target){
+      socket.emit('target.hit', {id: target.id + 1});
+    });
+
     socket.on('arduino.trigger', function(data){
       if (data.access_token === player.access_token && player.arduino.listening) {
         player.arduino.trigger(data.trigger);
@@ -52,7 +56,6 @@ module.exports = function(io) {
     });
 
     socket.on('arduino.launcher_set', function(data){
-      console.log(data);
       if (data.access_token === player.access_token) {
         player.arduino.setAngle(data.percentage, function(){
           game = new Game(player);

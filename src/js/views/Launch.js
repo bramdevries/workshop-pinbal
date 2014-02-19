@@ -6,17 +6,20 @@
  */
 pinball.LaunchView = Backbone.View.extend({
   tagName: 'div',
-  className: 'container fade',
+  className: 'full',
   id: 'launch',
   template: templates.launch,
+  logo: true,
   initialize: function(options) {
     _.bindAll(this, 'launcherSelectedHandler', 'angleSetHandler');
     this.launcher = new pinball.Launcher();
     this.launcher.emitter.on('launcher.selected', this.launcherSelectedHandler);
+
+    $('#page-logo-wrapper').removeClass('hidden');
   },
   render: function() {
     this.$el.html(this.template({players: this.players}));
-    this.$el.append(this.launcher.render().$el);
+    this.$el.find('.page').append(this.launcher.render().$el);
     return this;
   },
   launcherSelectedHandler: function(perc) {

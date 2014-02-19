@@ -39,7 +39,7 @@ function setup(server) {
   });
 
   io = io.listen(s);
-  sockets(io)
+  sockets(io);
   server.get('/', front.index);
 }
 

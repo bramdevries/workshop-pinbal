@@ -7,6 +7,7 @@ pinball.HomeView = Backbone.View.extend({
     'click [data-action="play"]': 'startGame'
   },
   initialize: function(options) {
+    this.sound = new buzz.sound('media/start', {formats: ['mp3']});
   },
   render: function() {
     this.$el.html(this.template({devices: this.devices}));
@@ -14,6 +15,7 @@ pinball.HomeView = Backbone.View.extend({
   },
   startGame: function(e) {
     e.preventDefault();
+    this.sound.play();
     this.app.setView(new pinball.LaunchView());
   }
 });

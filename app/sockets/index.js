@@ -14,8 +14,6 @@ module.exports = function(io) {
   io = io;
 
   function gameEnd(socket, pins) {
-    console.log('Game has ended');
-    //arduino.reset();
     socket.emit('arduino.score', {score: game.calculateScore(pins)});
   }
 

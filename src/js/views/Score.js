@@ -1,6 +1,6 @@
 pinball.ScoreView = Backbone.View.extend({
   tagName: 'div',
-  className: 'container fade',
+  className: 'full',
   id: 'score',
   template: templates.score,
   initialize: function(options) {

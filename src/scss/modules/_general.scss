@@ -18,10 +18,15 @@ body {
   background-image: url("../img/bg.png");
   font-family: "league-gothic", Arial, sans-serif;
   font-size: 62.5%;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
 }
 
 html, body, #container, #bg, #app, .full {
   height: 100%;
+}
+
+.full {
+  animation: fade-in .3s $ease-in-out-sine;
 }
 
 #container, #bg, #app {
@@ -239,28 +244,63 @@ h1 {
       margin-right: 10%;
       @include transform(rotate(-15deg))
     }
+    @media only screen and (max-width: 768px){
+      margin-left: 5%;
+      &.right {
+        margin-right: 5%;
+      }
+    }
+    @media only screen and (max-width: 481px) {
+      $scale: 0.14;
+      width: 795px * $scale;
+      height: 211px * $scale;
+    }
+  }
+}
+
+p {
+  text-align: center;
+  padding: 30px 0;
+  text-transform: uppercase;
+  font-size: 3em;
+  &.score {
+    font-size: 8em;
   }
 }
 
 #score {
-  -webkit-backface-visibility: hidden;
-  margin-top: -20px;
+  margin-top: 0px;
+  @media only screen and (max-width: 768px){
+    margin-top: -90px;
+  }
+  @media only screen and (max-width: 481px) {
+    margin-top: 0;
+  }
   h2 {
     text-align: center;
-    margin: 0 auto;
-    font-size: 5em;
-    color: #025b5e;
-    border-bottom: 3px solid #025b5e;
-    padding: 0 4px 5px 4px;
-    max-width: 8%;
-    width: 100%;
-    text-transform: uppercase;
-    letter-spacing: .03em;
     margin-bottom: 10px;
+    span {
+      text-align: center;
+      font-size: 5em;
+      color: #025b5e;
+      border-bottom: 3px solid #025b5e;
+      padding: 0 4px 5px 4px;
+      max-width: 8%;
+      width: 100%;
+      text-transform: uppercase;
+      letter-spacing: .03em;
+      @media only screen and (max-width: 768px){
+        margin-top: -90px;
+      }
+      @media only screen and (max-width: 481px) {
+        font-size: 3em;
+      }
+    }
   }
 
   #pins {
-    width: 24vw;
+    -webkit-backface-visibility: hidden;
+    width: 100%;
     margin: 0 auto;
     opacity: 0.8;
     @include clearfix();
@@ -273,8 +313,13 @@ h1 {
       justify-content: center;
     }
     .pin {
-      width: 3vw;
-      height: 3vw;
+      width: 40px;
+      height: 40px;
+      @media only screen and (max-width: 481px) {
+        width: 20px;
+        height: 20px;
+      }
+
       background-color: #000;
       margin: 1.5vw;
       float: left;
@@ -283,5 +328,14 @@ h1 {
         background-color: #025B53;
       }
     }
+  }
+}
+
+@include keyframes(fade-in) {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 }

@@ -13,6 +13,9 @@ pinball.ControlsView = Backbone.View.extend({
   render: function() {
     this.$el.html(this.template());
     this.app.socket.on('target.hit', this.targetHit);
+
+    this.app.socket.on('arduino.score', this.app.scoreReceived);
+
     return this;
   },
   targetHit: function(id) {

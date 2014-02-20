@@ -1,6 +1,6 @@
 pinball.LoadingView = Backbone.View.extend({
   tagName: 'div',
-  className: 'loading-container center fade',
+  className: 'full',
   id: 'loader',
   template: templates.loading,
   initialize: function(el, message) {
@@ -10,8 +10,6 @@ pinball.LoadingView = Backbone.View.extend({
   render: function() {
     this.$el.html(this.template());
     this.$parent.html(this.$el);
-
-    this.$el.append('<p class="help">' + this.message +'</p>');
   },
   start: function(message) {
     this.message = message;

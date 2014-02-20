@@ -10,10 +10,9 @@ pinball.App = Backbone.View.extend({
     this.socket = io.connect(window.location);
 
     this.loader = new pinball.LoadingView(this.$el);
-    //this.loader.start('Setting up connection to Arduino');
+    this.loader.start('Connecting to pinball machine');
 
     this.socket.on('arduino.playtime', this.playtime);
-    //this.socket.on('arduino.score', this.scoreReceived);
   },
   playtime: function(data){
     // Show the launch screen.

@@ -5,14 +5,11 @@ var express = require('express'),
     io      = require('socket.io'),
     sockets = require('../sockets'),
     Arduino = require('../arduino'),
-    front   = require('../controllers/front'),
-    board;
-
-var devices = [];
+    front   = require('../controllers/front');
 
 function setup(server) {
 
-  server.set('port', process.env.PORT || 3000);
+  server.set('port', process.env.PORT || 80);
 
   server.engine('hbs', hbs.express3({
     partialsDir: __dirname + '/..' + '/views/partials'
@@ -21,7 +18,6 @@ function setup(server) {
   server.set('view engine', 'hbs');
   server.set('views', __dirname + '/..' + '/views');
 
-  server.use(express.favicon());
   server.use(express.logger('dev'));
   server.use(express.json());
   server.use(express.bodyParser());

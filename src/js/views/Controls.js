@@ -9,6 +9,8 @@ pinball.ControlsView = Backbone.View.extend({
   },
   initialize: function() {
     _.bindAll(this, 'targetHit');
+    this.sound = new buzz.sound('media/flipper', {formats: ['mp3']});
+    this.soundHit = new buzz.sound('media/hit', {formats: ['mp3']});
   },
   render: function() {
     this.$el.html(this.template());
@@ -20,9 +22,11 @@ pinball.ControlsView = Backbone.View.extend({
   },
   targetHit: function(id) {
     this.$el.find('[data-pin=' + id.id + ']').addClass('hit');
+    this.soundHit.play();
   },
   triggerClickedHandler: function(e) {
     e.preventDefault();
+    this.sound.play();
     var trigger = $(e.currentTarget);
 
     var deg = '-=15deg';

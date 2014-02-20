@@ -29,6 +29,15 @@ html, body, #container, #bg, #app, .full {
   animation: fade-in .3s $ease-in-out-sine;
 }
 
+.toggle-sound {
+  color: #fff;
+  font-size: 2em;
+  position: absolute;
+  top: 1%;
+  left: 1%;
+  text-align: left;
+}
+
 img {
   width: 100%;
 }

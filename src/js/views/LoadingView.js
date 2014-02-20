@@ -10,7 +10,6 @@ pinball.LoadingView = Backbone.View.extend({
   render: function() {
     this.$el.html(this.template());
     this.$parent.html(this.$el);
-    this.$el.find('.page').append('<p class="help">' + this.message +'</p>');
   },
   start: function(message) {
     this.message = message;

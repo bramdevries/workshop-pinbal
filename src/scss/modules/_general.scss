@@ -29,6 +29,10 @@ html, body, #container, #bg, #app, .full {
   animation: fade-in .3s $ease-in-out-sine;
 }
 
+img {
+  width: 100%;
+}
+
 #container, #bg, #app {
   width: 100%;
 }
@@ -109,10 +113,6 @@ html, body, #container, #bg, #app, .full {
       }
     }
   }
-}
-
-img {
-  width: 100%;
 }
 
 #app {
@@ -331,11 +331,64 @@ p {
   }
 }
 
+#loading {
+  top: 100px;
+  position: relative;
+  #connecting {
+    display: block;
+    width: 191px;
+    @extend .center;
+  }
+  .logo {
+    background: url('../img/loading.png') no-repeat;
+    width: 200px;
+    height: 277px;
+    display: block;
+  }
+  .loader {
+    position: absolute;
+    top: 50%;
+    margin-top: -96px;
+    width: 178px;
+    height: 191px;
+    left: 5px;
+    border-radius: 50%;
+    border: 13px solid transparent;
+    border-left-color: #fcfcf6;
+    animation: spin 700ms infinite linear;
+    z-index: -5;
+    opacity: 0.7;
+  }
+
+  p {
+    margin-top: -140px;
+    -webkit-backface-visibility: visible;
+    animation: flicker 2000ms infinite linear;
+  }
+}
+
 @include keyframes(fade-in) {
   0% {
     opacity: 0;
   }
   100% {
+    opacity: 1;
+  }
+}
+@include keyframes(spin) {
+  from {
+    transform: rotate(0deg);
+ }
+ to {
+    transform: rotate(360deg);
+ }
+}
+
+@include keyframes(flicker) {
+  0%, 100%{
+    opacity: 0;
+  }
+  50% {
     opacity: 1;
   }
 }
